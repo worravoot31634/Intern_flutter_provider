@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io' show Platform;
 
-import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,7 +18,7 @@ import 'package:provider_flutter_application/provider/home_provider.dart';
 import 'package:location/location.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:get_ip/get_ip.dart';
+
 
 import 'package:provider_flutter_application/screens/article_screen.dart';
 import 'package:provider/provider.dart';
@@ -77,7 +75,7 @@ class _homePageState extends State<homePage> {
     message = "No message.";
 
     var initializationSettingsAndroid =
-    AndroidInitializationSettings('launch_background');
+    AndroidInitializationSettings('logo');
 
     var initializationSettingsIOS = IOSInitializationSettings(
         onDidReceiveLocalNotification: (id, title, body, payload) {
@@ -98,7 +96,7 @@ class _homePageState extends State<homePage> {
     super.initState();
   }
 
-  sendNotification(String actionType) async {
+  sendNotification(int id, String actionType) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(channelId,
         channelName, channelDescription,
         importance: Importance.Max, priority: Priority.High);
@@ -109,7 +107,7 @@ class _homePageState extends State<homePage> {
 
     DateFormat formatter = DateFormat('d MMMM yyyy HH:mm');
     String formatted = formatter.format(DateTime.now());
-    await flutterLocalNotificationsPlugin.show(111, 'Cube SoftTech Notifications',
+    await flutterLocalNotificationsPlugin.show(id, 'Cube SoftTech Notifications',
         'You $actionType at $formatted', platformChannelSpecifics,
         payload: 'I just haven\'t Met You Yet');
 
@@ -263,29 +261,6 @@ class _homePageState extends State<homePage> {
       ),
     );
   }
-
-
-
-  // void _getDeviceName() async {
-  //   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  //   String deviceName;
-  //   if (Platform.isAndroid) {
-  //     // Android-specific code
-  //     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-  //     deviceName = androidInfo.model.toString();
-  //     print('Running on ${androidInfo.model}');
-  //   } else if (Platform.isIOS) {
-  //     // iOS-specific code
-  //     IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-  //     deviceName = iosInfo.utsname.machine.toString();
-  //     print('Running on ${iosInfo.utsname.machine}');
-  //   }
-  //   setState(() {
-  //     userAgent = deviceName;
-  //   });
-  // }
-
-
 
   Future<LocationData> getCurrentLocation() async {
     Location location = Location();
@@ -446,7 +421,11 @@ class _homePageState extends State<homePage> {
                             :context
                                 .watch<HomeProvider>()
                                 .btnStatus ==
-                                'finished-working' ? Text('finished',style: TextStyle(fontSize: 18))
+                                'finished-working' ? Text('Finished!',style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 19,
+                            ),)
                             :context
                                 .watch<HomeProvider>()
                                 .btnStatus ==
@@ -673,7 +652,7 @@ class _homePageState extends State<homePage> {
 
             if (status.data == "success") {
               log("status: " + status.data);
-              sendNotification('$typeCheck');
+              sendNotification(int.parse(checkInType), '$typeCheck');
               context.read<HomeProvider>().updateButton();
               context.read<HomeProvider>().setLastCheckIn();
               //_refreshButtonCheckIn();
