@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider_flutter_application/animation/LoadingCubeGridAnimation.dart';
 import 'package:provider_flutter_application/animation/LoadingRippleAnimation.dart';
@@ -19,34 +20,30 @@ import 'package:location/location.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-
 import 'package:provider_flutter_application/screens/article_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_flutter_application/screens/late_checkIn_screen.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
-
-
-class HomePage extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return homePage();
+    return MaterialApp(home: homeScreen());
   }
 }
 
-class homePage extends StatefulWidget {
+class homeScreen extends StatefulWidget {
   @override
-  _homePageState createState() => _homePageState();
+  _homeScreenState createState() => _homeScreenState();
 }
 
-
-
-class _homePageState extends State<homePage> {
+class _homeScreenState extends State<homeScreen> {
   //Google Map
   Completer<GoogleMapController> _controller = Completer();
   LocationData currentLocation;
+
   //Notification
   String message;
   String channelId = "1000";
@@ -58,7 +55,8 @@ class _homePageState extends State<homePage> {
   String id;
   String userAgent;
   String ipAddress;
-  bool statusCheckIn;
+
+  //bool statusCheckIn;
   Timer timer;
   Color colorButtonCheckIn;
   String textButtonCheckIn;
@@ -69,36 +67,35 @@ class _homePageState extends State<homePage> {
   void initState() {
     context.read<HomeProvider>().initState();
 
-    startTimer(); //Start count timer each 30 sec.
-
+    //startTimer(); //Start count timer each 30 sec.
+    //context.read<HomeProvider>().setDateTime();
     //Notification
     message = "No message.";
 
-    var initializationSettingsAndroid =
-    AndroidInitializationSettings('logo');
+    var initializationSettingsAndroid = AndroidInitializationSettings('logo');
 
     var initializationSettingsIOS = IOSInitializationSettings(
         onDidReceiveLocalNotification: (id, title, body, payload) {
-          print("onDidReceiveLocalNotification called.");
-        });
+      print("onDidReceiveLocalNotification called.");
+    });
     var initializationSettings = InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (payload) {
-          // when user tap on notification.
-          print("onSelectNotification called.");
-          setState(() {
-            message = payload;
-          });
-        });
+      // when user tap on notification.
+      print("onSelectNotification called.");
+      setState(() {
+        message = payload;
+      });
+    });
 
     super.initState();
   }
 
   sendNotification(int id, String actionType) async {
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(channelId,
-        channelName, channelDescription,
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        channelId, channelName, channelDescription,
         importance: Importance.Max, priority: Priority.High);
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
 
@@ -107,10 +104,12 @@ class _homePageState extends State<homePage> {
 
     DateFormat formatter = DateFormat('d MMMM yyyy HH:mm');
     String formatted = formatter.format(DateTime.now());
-    await flutterLocalNotificationsPlugin.show(id, 'Cube SoftTech Notifications',
-        'You $actionType at $formatted', platformChannelSpecifics,
+    await flutterLocalNotificationsPlugin.show(
+        id,
+        'Cube SoftTech Notifications',
+        'You $actionType at $formatted',
+        platformChannelSpecifics,
         payload: 'I just haven\'t Met You Yet');
-
   }
 
   startTimer() {
@@ -124,24 +123,23 @@ class _homePageState extends State<homePage> {
     timer.cancel();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     log('[Build] Home Screen at ' + DateTime.now().toString());
 
-    latitude = context.watch<HomeProvider>().latitude;
-    longitude = context.watch<HomeProvider>().longitude;
-    statusCheckIn = context.watch<HomeProvider>().statusCheckIn;
-    id = context.watch<HomeProvider>().id;
-    ipAddress = context.watch<HomeProvider>().ipAddress;
-    userAgent = context.watch<HomeProvider>().userAgent;
+    // latitude = context.watch<HomeProvider>().latitude;
+    // longitude = context.watch<HomeProvider>().longitude;
+    // statusCheckIn = context.watch<HomeProvider>().statusCheckIn;
+    // id = context.watch<HomeProvider>().id;
+    // ipAddress = context.watch<HomeProvider>().ipAddress;
+    // userAgent = context.watch<HomeProvider>().userAgent;
 
     return Scaffold(
-        body:
-            context.watch<HomeProvider>().initLoading ? LoadingCubeGrid() : homeInit());
+      body: context.watch<HomeProvider>().initLoading
+          ? LoadingCubeGrid()
+          : homeInit(),
+    );
   }
-
 
   Column serviceWidget(String img, String name) {
     return Column(
@@ -153,22 +151,15 @@ class _homePageState extends State<homePage> {
                 case "Late\nCheck In":
                   {
                     print("Check In click");
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => new LateCheckIn()));
+                    Get.toNamed('lateCheckIn');
                   }
                   break;
 
                 case "Article\n":
                   {
                     print("Article click");
+                    Get.toNamed('article');
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => new ArticlePage()),
-                    );
                   }
                   break;
 
@@ -273,7 +264,6 @@ class _homePageState extends State<homePage> {
       return null;
     }
   }
-
 
   Widget homeInit() {
     return Container(
@@ -380,13 +370,10 @@ class _homePageState extends State<homePage> {
                           height: 60,
                           width: 120,
                           child: Center(
-                            child: context
-                                        .watch<HomeProvider>()
-                                        .btnStatus ==
+                            child: context.watch<HomeProvider>().btnStatus ==
                                     'check-in'
                                 ? RaisedButton(
                                     onPressed: () async {
-
                                       context
                                           .read<HomeProvider>()
                                           .setCurrentLocation();
@@ -396,12 +383,6 @@ class _homePageState extends State<homePage> {
                                       latitude = currentLocation.latitude;
                                       longitude = currentLocation.longitude;
                                       return alertCheck("Check In").show();
-                                      // if (statusCheckIn) {
-                                      //   return alertCheck("Check Out")
-                                      //       .show();
-                                      // } else {
-                                      //   return alertCheck("Check In").show();
-                                      // }
                                     },
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
@@ -418,51 +399,50 @@ class _homePageState extends State<homePage> {
                                       ),
                                     ),
                                   )
-                            :context
-                                .watch<HomeProvider>()
-                                .btnStatus ==
-                                'finished-working' ? Text('Finished!',style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 19,
-                            ),)
-                            :context
-                                .watch<HomeProvider>()
-                                .btnStatus ==
-                                null ? new LoadingRipple()
-                                : RaisedButton(
-
-                                    onPressed: () async{
-                                      context
-                                          .read<HomeProvider>()
-                                          .setCurrentLocation();
-
-                                      currentLocation =
-                                          await getCurrentLocation();
-                                      latitude = currentLocation.latitude;
-                                      longitude = currentLocation.longitude;
-                                      return alertCheck('Check Out').show();
-                                      // if (statusCheckIn) {
-                                      //   return alertCheck('Check Out').show();
-                                      // } else {
-                                      //   return alertCheck('Check In').show();
-                                      // }
-                                    },
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                    ),
-                                    color: Colors.blue,
-                                    child: Center(
-                                      child: Text(
-                                        'Check Out',
+                                : context.watch<HomeProvider>().btnStatus ==
+                                        'finished-working'
+                                    ? Text(
+                                        'Finished!',
                                         style: TextStyle(
-                                          color: Colors.white,
+                                          color: Colors.red,
                                           fontWeight: FontWeight.w500,
                                           fontSize: 19,
                                         ),
-                                      ),
-                                    ),
-                                  ),
+                                      )
+                                    : context.watch<HomeProvider>().btnStatus ==
+                                            null
+                                        ? new LoadingRipple()
+                                        : RaisedButton(
+                                            onPressed: () async {
+                                              context
+                                                  .read<HomeProvider>()
+                                                  .setCurrentLocation();
+
+                                              currentLocation =
+                                                  await getCurrentLocation();
+                                              latitude =
+                                                  currentLocation.latitude;
+                                              longitude =
+                                                  currentLocation.longitude;
+                                              return alertCheck('Check Out')
+                                                  .show();
+                                            },
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                            ),
+                                            color: Colors.blue,
+                                            child: Center(
+                                              child: Text(
+                                                'Check Out',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 19,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                           ),
                         ),
                       ],
@@ -481,7 +461,7 @@ class _homePageState extends State<homePage> {
                           children: [
                             Container(
                               child: Text(
-                                "Last check-in: ",
+                                "Last Check-in: ",
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -497,12 +477,15 @@ class _homePageState extends State<homePage> {
                               ),
                             ),
                             Container(
-                              child:  context.watch<HomeProvider>().lastDateCheckInStr == null
-                                  ? new SpinKitFadingCircle(color: Colors.white,size: 19)
-                                  : Text('${context.watch<HomeProvider>().lastDateCheckInStr}',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
-                              ),
+                              child: context.watch<HomeProvider>().lastDateCheckInStr == null
+                                  ? new SpinKitFadingCircle(
+                                      color: Colors.white, size: 19)
+                                  : Text(
+                                      '${context.watch<HomeProvider>().lastDateCheckInStr}',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                               padding: EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
@@ -571,6 +554,11 @@ class _homePageState extends State<homePage> {
       //Error something
       checkInType = "0";
     }
+    id = Provider.of<HomeProvider>(context, listen: false).id;
+    latitude = Provider.of<HomeProvider>(context, listen: false).latitude;
+    longitude = Provider.of<HomeProvider>(context, listen: false).longitude;
+    ipAddress = Provider.of<HomeProvider>(context, listen: false).ipAddress;
+    userAgent = Provider.of<HomeProvider>(context, listen: false).userAgent;
 
     return Alert(
       context: context,
@@ -586,7 +574,6 @@ class _homePageState extends State<homePage> {
       content: Container(
         height: 200,
         child: GoogleMap(
-
           mapType: MapType.normal,
           initialCameraPosition: CameraPosition(
             target: LatLng(latitude ?? null, longitude ?? null),
@@ -618,7 +605,6 @@ class _homePageState extends State<homePage> {
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
             log("cancel");
-
           },
         ),
         DialogButton(
@@ -646,7 +632,7 @@ class _homePageState extends State<homePage> {
             // workHours.wo = workingHours;
             //log("DATA: " + workHours.toJson().toString());
             BaseModel<String> status =
-            await workHoursApi.checkInAndOut(workHours);
+                await workHoursApi.checkInAndOut(workHours);
             //log("status: " + status.data.toString());
             //_getTodayCheckInById();
 
@@ -664,5 +650,3 @@ class _homePageState extends State<homePage> {
     );
   }
 }
-
-

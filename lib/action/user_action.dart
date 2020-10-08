@@ -48,8 +48,8 @@ class UserAction {
   Future<bool> getStatusCheckInToDay(String id) async {
     //get work hours
     WorkHoursApi workHourApi = new WorkHoursApi();
-    List<WorkHours> workHours =
-        await workHourApi.getTodayCheckInById(id);
+    List<WorkHours> workHours = await workHourApi.getTodayCheckInById(id);
+
 
     if (workHours.isNotEmpty) {
       return true;
@@ -63,6 +63,7 @@ class UserAction {
     WorkHoursApi workHourApi = new WorkHoursApi();
     List<WorkHours> workHours =
     await workHourApi.getTodayCheckOutById(id);
+
 
     if (workHours.isNotEmpty) {
       return true;

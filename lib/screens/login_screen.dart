@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_flutter_application/action/user_action.dart';
 import 'package:provider_flutter_application/animation/LoadingCubeGridAnimation.dart';
@@ -212,7 +213,7 @@ class _LoginScreenState extends State<_LoginScreen> {
                       onTap: () async{
                         if (!(_ctrlUsername.text == '' && _ctrlPassword.text == '')) {
                           bool loginSuccess = await userAction.doLoginAction(_ctrlUsername.text, _ctrlPassword.text);
-                          if (loginSuccess) Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage()));
+                          if (loginSuccess) Get.toNamed('home');
                         }
                       },
                       child: Container(

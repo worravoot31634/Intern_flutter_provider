@@ -60,6 +60,7 @@ class HomeProvider extends ChangeNotifier {
 
   String get btnStatus => _btnStatus;
 
+  //Declare
   LocationData currentLocation;
   UserAction userAction = new UserAction();
   WorkHoursApi workHourApi = new WorkHoursApi();
@@ -68,8 +69,8 @@ class HomeProvider extends ChangeNotifier {
     log('[init State] Home Screen');
     _initLoading = true;
     SharedPref pref = new SharedPref();
-
     currentLocation = await getCurrentLocation();
+
     _id = await pref.getId();
     _nameStr = await pref.getName();
     _latitude = currentLocation.latitude;
@@ -79,13 +80,13 @@ class HomeProvider extends ChangeNotifier {
     _ipAddress = await GetIp.ipAddress;
     _userAgent = await getUserAgent();
     updateButton();
-    _initLoading = false; //disabled Home Screen loading
-    notifyListeners();
+
 
 
     WorkHours workHours =
         await workHourApi.getLastCheckInById(await pref.getId());
     _lastDateCheckInStr = workHours.workHoursTimeWork;
+    _initLoading = false; //disabled Home Screen loading
     notifyListeners();
   }
 
@@ -95,8 +96,7 @@ class HomeProvider extends ChangeNotifier {
     SharedPref pref = new SharedPref();
     bool checkinToday = await userAction.getStatusCheckInToDay(await pref.getId());
     bool checkoutToday = await userAction.getStatusCheckOutToDay(await pref.getId());
-    _statusCheckIn = checkinToday;
-    notifyListeners();
+    //_statusCheckIn = checkinToday;
     /* *
      * [Possible case]
      * [1] don't check-in and dont check-out = {buttonColor: green, buttonText: 'check-in'}
@@ -114,6 +114,7 @@ class HomeProvider extends ChangeNotifier {
     }else{
       _btnStatus = 'exception';
     }
+    log('change btnStatus finished');
     notifyListeners();
 
   }
@@ -148,9 +149,11 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setDateTime() async {
+  void setDateTime() {
+
     _dateStr = getCurrentDate();
     _timeStr = getCurrentTime();
+    log('setDateTime: {_dateStr: $_dateStr, _timeStr: $_timeStr}');
     notifyListeners();
   }
 

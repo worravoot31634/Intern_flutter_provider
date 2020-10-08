@@ -9,7 +9,7 @@ class NavigationProvider extends ChangeNotifier {
   Widget get getNavigation {
 
     if (currentNavigation == "Home") {
-      return HomePage();
+      return HomeScreen();
     } else if (currentNavigation == "Article") {
       return ArticlePage();
     } else {

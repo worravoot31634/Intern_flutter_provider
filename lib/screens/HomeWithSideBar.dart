@@ -150,7 +150,7 @@ class _homeWithSidebarState extends State<homeWithSidebar>
                     color: Colors.white),
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(40)),
-                  child: HomePage(),
+                  child: HomeScreen(),
                 ),
               ),
             ),
