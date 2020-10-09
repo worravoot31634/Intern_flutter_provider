@@ -74,7 +74,7 @@ class ArticleProvider extends ChangeNotifier {
     _countItemListArticle = 10;
     log("refresh! count = " + countItemListArticle.toString());
 
-    // await _getAllArticle();
+    getAllArticle();
 
     refreshController.refreshCompleted();
     notifyListeners();
