@@ -32,6 +32,7 @@ class ArticleProvider extends ChangeNotifier {
   }
 
   void getAllArticle() async {
+
     _articleScreenLoading = true;
     notifyListeners();
 

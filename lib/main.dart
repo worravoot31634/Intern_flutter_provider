@@ -46,6 +46,12 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/articleDetails', page: () => ArticleDetailsPage()),
         GetPage(name: '/lateCheckIn', page: () => LateCheckIn()),
       ],
+      builder: (context, child) {
+        return ScrollConfiguration(
+          behavior: MyBehavior(),
+          child: child,
+        );
+      },
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -60,6 +66,14 @@ class MyApp extends StatelessWidget {
         const Locale('th', 'TH'), // Thai
       ],
     );
+  }
+}
+
+class MyBehavior extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
   }
 }
 

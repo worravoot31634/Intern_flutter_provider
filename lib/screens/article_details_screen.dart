@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider_flutter_application/model/article.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
@@ -7,38 +10,28 @@ import 'package:intl/intl.dart';
 import '../global.dart';
 
 class ArticleDetailsPage extends StatelessWidget {
-  Article article;
-
-  ArticleDetailsPage({this.article});
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      body: articleDetailsPage(article: article),
+      body: Get.arguments != null ? articleDetailsPage(article: Get.arguments) : Text('ERROR send Data!'),
     );
   }
 }
 
-class articleDetailsPage extends StatefulWidget {
-  Article article;
+class articleDetailsPage extends StatelessWidget {
 
   articleDetailsPage({this.article});
 
-  @override
-  _articleDetailsPageState createState() =>
-      _articleDetailsPageState(article: article);
-}
-
-class _articleDetailsPageState extends State<articleDetailsPage> {
   Article article;
   String articleId;
   String topic;
   String writer;
-  String time_create;
-  String img_asset_path;
+  String timeCreate;
+  String imgAssetPath;
   Article articleList;
 
-  _articleDetailsPageState({this.article});
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +39,8 @@ class _articleDetailsPageState extends State<articleDetailsPage> {
     articleId = article.articleId.toString();
     topic = article.topic;
     writer = article.userCreate;
-    img_asset_path = API.BASE_API_URL + article.path;
-    time_create = article.timeCreate;
+    imgAssetPath = API.BASE_API_URL + article.path;
+    timeCreate = article.timeCreate;
 
     return Scaffold(
       body: Container(
@@ -110,7 +103,7 @@ class _articleDetailsPageState extends State<articleDetailsPage> {
                         style: TextStyle(
                           fontSize: 21,
                           fontWeight: FontWeight.w800,
-                          fontFamily: 'avenir',
+                          fontFamily: 'prompt',
                         ),
                       ),
                     ),
@@ -127,7 +120,7 @@ class _articleDetailsPageState extends State<articleDetailsPage> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
-                                fontFamily: 'avenir',
+                                fontFamily: 'prompt',
                               ),
                             ),
                           ),
@@ -141,7 +134,7 @@ class _articleDetailsPageState extends State<articleDetailsPage> {
                                 color: Colors.red[400],
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
-                                fontFamily: 'avenir',
+                                fontFamily: 'prompt',
                               ),
                             ),
                           ),
@@ -154,11 +147,11 @@ class _articleDetailsPageState extends State<articleDetailsPage> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        dateStrToDateTime(time_create),
+                        dateStrToDateTime(timeCreate),
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          fontFamily: 'avenir',
+                          fontFamily: 'prompt',
                         ),
                       ),
                     ),
@@ -170,7 +163,7 @@ class _articleDetailsPageState extends State<articleDetailsPage> {
                         children: [
                           Container(
                             child: Image.network(
-                              img_asset_path,
+                              imgAssetPath,
                               fit: BoxFit.cover,
                               alignment: Alignment.center,
                             ),

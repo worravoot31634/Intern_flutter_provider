@@ -5,15 +5,21 @@ import 'dart:io';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_ip/get_ip.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:provider_flutter_application/action/user_action.dart';
 import 'package:provider_flutter_application/api/user_api/work_hours_api.dart';
 import 'package:provider_flutter_application/model/work_hours.dart';
+import 'package:provider_flutter_application/screens/home_screen.dart';
 import 'package:provider_flutter_application/shared_preferences/SharedPref.dart';
 
+
+
 class HomeProvider with ChangeNotifier {
+
+
   String _id;
   bool _statusCheckIn;
   double _latitude;
@@ -29,6 +35,13 @@ class HomeProvider with ChangeNotifier {
   bool _initLoading;
   bool _latLongLoading = true;
   String _btnStatus;
+
+  //Notification
+  String _notifyMessage;
+  String _notifyChannelId;
+  String _notifyChannelName = "FLUTTER_NOTIFICATION_CHANNEL";
+  String _notifyChannelDescription = "FLUTTER_NOTIFICATION_CHANNEL_DETAIL";
+
 
   String get id => _id;
 
@@ -60,7 +73,14 @@ class HomeProvider with ChangeNotifier {
 
   String get btnStatus => _btnStatus;
 
-  //Declare
+  String get notifyMessage => _notifyMessage;
+
+  String get notifyChannelId => _notifyChannelId;
+
+  String get notifyChannelName => _notifyChannelName;
+
+  String get notifyChannelDescription => _notifyChannelDescription;
+
   LocationData currentLocation;
   UserAction userAction = new UserAction();
   WorkHoursApi workHourApi = new WorkHoursApi();
@@ -99,6 +119,46 @@ class HomeProvider with ChangeNotifier {
     _initLoading = false; //disabled Home Screen loading
     notifyListeners();
   }
+
+  void initNotification(){
+    _notifyMessage = "No message.";
+
+    var initializationSettingsAndroid = AndroidInitializationSettings('logo');
+    var initializationSettingsIOS = IOSInitializationSettings(
+        onDidReceiveLocalNotification: (id, title, body, payload) {
+          print("onDidReceiveLocalNotification called. $payload");
+          return null;
+        });
+    var initializationSettings = InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: (payload) {
+          // when user tap on notification.
+          print("onSelectNotification called.");
+          return null;
+        });
+  }
+
+  sendNotification(int id, String actionType) async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        _notifyChannelId, _notifyChannelName, _notifyChannelDescription,
+        importance: Importance.Max, priority: Priority.High);
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+
+    DateFormat formatter = DateFormat('d MMMM yyyy HH:mm');
+    String formatted = formatter.format(DateTime.now());
+    await flutterLocalNotificationsPlugin.show(
+        id,
+        'Cube SoftTech Notifications',
+        'You $actionType at $formatted',
+        platformChannelSpecifics,
+        payload: 'I just haven\'t Met You Yet');
+  }
+
 
   void updateButton() async {
     _btnStatus = null;
@@ -211,4 +271,6 @@ class HomeProvider with ChangeNotifier {
     }
     return deviceName;
   }
+
+
 }

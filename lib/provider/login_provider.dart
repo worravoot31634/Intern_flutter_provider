@@ -1,12 +1,19 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:provider_flutter_application/action/user_action.dart';
 import 'package:provider_flutter_application/model/user.dart';
 
 class LoginProvider extends ChangeNotifier {
-  String _username;
-  String _password;
+
+
+  TextEditingController _ctrlUsername = TextEditingController();
+  TextEditingController _ctrlPassword = TextEditingController();
+
+  TextEditingController get ctrlUsername => _ctrlUsername;
+  TextEditingController get ctrlPassword => _ctrlPassword;
+
 
   String _loading = "Idle";
   String get loading => _loading;
@@ -20,6 +27,7 @@ class LoginProvider extends ChangeNotifier {
     log('loginStatus: {status: $loginSuccess}');
     if (loginSuccess) {
       _loading = "Success";
+      Get.toNamed('/home');
       notifyListeners();
     } else {
       _loading = "Failed";
@@ -30,4 +38,6 @@ class LoginProvider extends ChangeNotifier {
     _loading = "InProgress";
     notifyListeners();
   }
+
+
 }

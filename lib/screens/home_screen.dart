@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +30,7 @@ FlutterLocalNotificationsPlugin();
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: homeScreen());
+    return MaterialApp(home: homeScreen(), debugShowCheckedModeBanner: false);
   }
 }
 
@@ -60,7 +61,7 @@ class homeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     log('Build at ' + DateTime.now().toString(),name: '[Home Screen]');
-    //final state = context.watch<HomeProvider>();
+    final state = context.watch<HomeProvider>();
 
 
     message = "No message.";

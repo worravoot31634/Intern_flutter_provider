@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_flutter_application/animation/LoadingCubeGridAnimation.dart';
 import 'package:provider_flutter_application/api/base_model.dart';
@@ -214,15 +215,16 @@ class articlePage extends StatelessWidget {
                         return InkWell(
                           onTap: () {
                             print(states.articleListView[index].topic);
+                            Get.toNamed('articleDetails',arguments: states.articleListView[index]);
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ArticleDetailsPage(
-                                  article: states.articleListView[index],
-                                ),
-                              ),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => ArticleDetailsPage(
+                            //       article: states.articleListView[index],
+                            //     ),
+                            //   ),
+                            // );
                           },
                           child: ArticleTile(
                             //Send List to Tile
@@ -234,7 +236,6 @@ class articlePage extends StatelessWidget {
                   ),
                 ),
               ),
-
             ),
           ],
         ),
@@ -294,6 +295,7 @@ class ArticleTile extends StatelessWidget {
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
+                        fontFamily: 'prompt',
                         fontWeight: FontWeight.w600),
                   ),
                   SizedBox(
@@ -310,7 +312,7 @@ class ArticleTile extends StatelessWidget {
                       ),
                       Text(
                         '${dateStrToDateTime(timeCreate)}',
-                        style: TextStyle(color: Colors.white, fontSize: 12),
+                        style: TextStyle(color: Colors.white, fontSize: 12,fontFamily: 'prompt',),
                       ),
                     ],
                   ),
