@@ -13,7 +13,7 @@ import 'package:provider_flutter_application/api/user_api/work_hours_api.dart';
 import 'package:provider_flutter_application/model/work_hours.dart';
 import 'package:provider_flutter_application/shared_preferences/SharedPref.dart';
 
-class HomeProvider extends ChangeNotifier {
+class HomeProvider with ChangeNotifier {
   String _id;
   bool _statusCheckIn;
   double _latitude;
@@ -65,8 +65,20 @@ class HomeProvider extends ChangeNotifier {
   UserAction userAction = new UserAction();
   WorkHoursApi workHourApi = new WorkHoursApi();
 
+  HomeProvider() {
+    log('Init',name: 'HomeProvider');
+
+    Timer.periodic(Duration(seconds: 1), (Timer t) {
+      if(_formatTime(DateTime.now()) != _timeStr){
+        setDateTime();
+      }
+    });
+
+
+    initState();
+  }
+
   void initState() async {
-    log('[init State] Home Screen');
     _initLoading = true;
     SharedPref pref = new SharedPref();
     currentLocation = await getCurrentLocation();
@@ -81,21 +93,21 @@ class HomeProvider extends ChangeNotifier {
     _userAgent = await getUserAgent();
     updateButton();
 
-
-
     WorkHours workHours =
-        await workHourApi.getLastCheckInById(await pref.getId());
+    await workHourApi.getLastCheckInById(await pref.getId());
     _lastDateCheckInStr = workHours.workHoursTimeWork;
     _initLoading = false; //disabled Home Screen loading
     notifyListeners();
   }
 
-  void updateButton() async{
+  void updateButton() async {
     _btnStatus = null;
     notifyListeners();
     SharedPref pref = new SharedPref();
-    bool checkinToday = await userAction.getStatusCheckInToDay(await pref.getId());
-    bool checkoutToday = await userAction.getStatusCheckOutToDay(await pref.getId());
+    bool checkinToday =
+    await userAction.getStatusCheckInToDay(await pref.getId());
+    bool checkoutToday =
+    await userAction.getStatusCheckOutToDay(await pref.getId());
     //_statusCheckIn = checkinToday;
     /* *
      * [Possible case]
@@ -105,20 +117,18 @@ class HomeProvider extends ChangeNotifier {
      * [Maybe possible case]
      * [5] check-out and dont check-in = {error: 'exception'}
      * */
-    if(!checkinToday && !checkoutToday){
+    if (!checkinToday && !checkoutToday) {
       _btnStatus = 'check-in';
-    }else if(checkinToday && !checkoutToday){
+    } else if (checkinToday && !checkoutToday) {
       _btnStatus = 'check-out';
-    }else if(checkinToday && checkoutToday){
+    } else if (checkinToday && checkoutToday) {
       _btnStatus = 'finished-working';
-    }else{
+    } else {
       _btnStatus = 'exception';
     }
     log('change btnStatus finished');
     notifyListeners();
-
   }
-
 
   void setLastCheckIn() async {
     _lastDateCheckInStr = null;
@@ -126,7 +136,7 @@ class HomeProvider extends ChangeNotifier {
     WorkHoursApi workHourApi = new WorkHoursApi();
     SharedPref pref = new SharedPref();
     WorkHours workHours =
-        await workHourApi.getLastCheckInById(await pref.getId());
+    await workHourApi.getLastCheckInById(await pref.getId());
     _lastDateCheckInStr = workHours.workHoursTimeWork;
     notifyListeners();
   }
@@ -150,10 +160,9 @@ class HomeProvider extends ChangeNotifier {
   }
 
   void setDateTime() {
-
     _dateStr = getCurrentDate();
     _timeStr = getCurrentTime();
-    log('setDateTime: {_dateStr: $_dateStr, _timeStr: $_timeStr}');
+    log('{_dateStr: $_dateStr, _timeStr: $_timeStr}',name:'setDateTime');
     notifyListeners();
   }
 
@@ -175,7 +184,7 @@ class HomeProvider extends ChangeNotifier {
 
   Future<LocationData> getCurrentLocation() async {
     Location location = Location();
-    print('set located');
+    //print('set located');
     try {
       return await location.getLocation();
     } on PlatformException catch (e) {

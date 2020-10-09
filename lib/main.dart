@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_flutter_application/provider/article_provider.dart';
@@ -37,12 +39,25 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: LoginScreen(),
-      getPages: [
-        GetPage(name: '/', page: () => LoginScreen()),
+       getPages: [
+        GetPage(name: '/', page: () => LoginScreen(),),
         GetPage(name: '/home', page: () => HomeScreen()),
         GetPage(name: '/article', page: () => ArticlePage()),
         GetPage(name: '/articleDetails', page: () => ArticleDetailsPage()),
         GetPage(name: '/lateCheckIn', page: () => LateCheckIn()),
+      ],
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate,
+        GlobalCupertinoLocalizations
+            .delegate, // Add global cupertino localizations.
+      ],
+      locale: Locale('en', 'US'),
+      // Current locale
+      supportedLocales: [
+        const Locale('en', 'US'), // English
+        const Locale('th', 'TH'), // Thai
       ],
     );
   }

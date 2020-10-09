@@ -15,7 +15,7 @@ class UserAction {
 
       if (userResponse.id.isNotEmpty) {
         if (setSharedPref(userResponse)) {
-          log('save sharedPref success');
+          log('save sharedPref success', name: 'doLoginAction');
         }
 
         return true;
@@ -39,7 +39,7 @@ class UserAction {
       pref.setRoleId(user.roleId);
       return true;
     } catch (error, stacktrace) {
-      log('set sharedPref Error');
+      log('set sharedPref Error', name: 'setSharedPref');
       print("Exception occurred: $error stackTrace: $stacktrace");
       return false;
     }

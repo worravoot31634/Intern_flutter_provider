@@ -27,19 +27,7 @@ class LoginScreen extends StatelessWidget {
         );
       },
       debugShowCheckedModeBanner: false,
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        DefaultCupertinoLocalizations.delegate,
-        GlobalCupertinoLocalizations
-            .delegate, // Add global cupertino localizations.
-      ],
-      locale: Locale('en', 'US'),
-      // Current locale
-      supportedLocales: [
-        const Locale('en', 'US'), // English
-        const Locale('th', 'TH'), // Thai
-      ],
+
     );
   }
 }
@@ -61,12 +49,12 @@ class _LoginScreenState extends State<_LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('[Build] Login screen! in ' + DateTime.now().toString());
+    log('Build at ' + DateTime.now().toString(),name: '[Login screen]');
     /**
-     * status have 4 impossible value =
+     * status have 4 possible value =
      * Idle, InProgress, Success, Failed
      * **/
-    status = context.watch<LoginProvider>().loading;
+    //status = context.watch<LoginProvider>().loading;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -135,7 +123,14 @@ class _LoginScreenState extends State<_LoginScreen> {
                       Container(
                         margin: EdgeInsets.only(top: 50),
                         child: Center(
-                          child: const HeaderText(),
+                          child: Text(
+                            '$headerText',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                     ),

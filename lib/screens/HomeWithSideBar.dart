@@ -22,7 +22,6 @@ class _homeWithSidebarState extends State<homeWithSidebar>
   AnimationController rotationController;
   @override
   void initState() {
-    // TODO: implement initState
 
     rotationController =
         AnimationController(duration: Duration(milliseconds: 200), vsync: this);

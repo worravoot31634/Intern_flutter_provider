@@ -24,66 +24,75 @@ class ArticlePage extends StatelessWidget {
   }
 }
 
-class articlePage extends StatefulWidget {
-  @override
-  _articlePageState createState() => _articlePageState();
-}
-
-class _articlePageState extends State<articlePage> {
-  List<Article> articleListView = new List<Article>();
-  int countItemListArticle = 10;
-  int lenArticleList;
-  bool loading = true;
+class articlePage extends StatelessWidget {
+  // List<Article> articleListView = new List<Article>();
+  // int countItemListArticle = 10;
+  // int lenArticleList;
+  // bool loading = true;
 
   //refresh when pull screen
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  // RefreshController _refreshController =
+  //     RefreshController(initialRefresh: false);
 
-  void _onRefresh() async {
-    // monitor network fetch
-    // await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use refreshFailed()
-    countItemListArticle = 10;
-    log("refresh! count = " + countItemListArticle.toString());
+  // void _onRefresh() async {
+  //   // monitor network fetch
+  //   // await Future.delayed(Duration(milliseconds: 1000));
+  //   // if failed,use refreshFailed()
+  //   countItemListArticle = 10;
+  //   log("refresh! count = " + countItemListArticle.toString());
+  //
+  //   // await _getAllArticle();
+  //
+  //   state.refreshController.refreshCompleted();
+  // }
 
-    await _getAllArticle();
-    _refreshController.refreshCompleted();
-  }
+  // void _onLoading() async {
+  //   // monitor network fetch
+  //   await Future.delayed(Duration(milliseconds: 1000));
+  //   // if failed,use loadFailed(),if no data return,use LoadNodata()
+  //   if (countItemListArticle < lenArticleList) {
+  //     // get 2 list when refresh
+  //     if (countItemListArticle + 2 <= lenArticleList) {
+  //       countItemListArticle += 2;
+  //     } else if (countItemListArticle + 1 <= lenArticleList) {
+  //       countItemListArticle += 1;
+  //     }
+  //     log("countItemArticle: " + countItemListArticle.toString());
+  //     log("len: " + lenArticleList.toString());
+  //
+  //     articleListView.add((articleListView[countItemListArticle]));
+  //     state.refreshController.loadComplete();
+  //   } else {
+  //     log("no data");
+  //     state.refreshController.loadNoData();
+  //   }
+  // }
 
-  void _onLoading() async {
-    // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use loadFailed(),if no data return,use LoadNodata()
-    if (countItemListArticle < lenArticleList) {
-      // get 2 list when refresh
-      if (countItemListArticle + 2 <= lenArticleList) {
-        countItemListArticle += 2;
-      } else if (countItemListArticle + 1 <= lenArticleList) {
-        countItemListArticle += 1;
-      }
-      log("countItemArticle: " + countItemListArticle.toString());
-      log("len: " + lenArticleList.toString());
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   countItemListArticle = 10;
+  //
+  //   _getAllArticle();
+  // }
 
-      articleListView.add((articleListView[countItemListArticle]));
-      _refreshController.loadComplete();
-    } else {
-      log("no data");
-      _refreshController.loadNoData();
-    }
-
-    if (mounted) setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    countItemListArticle = 10;
-
-    _getAllArticle();
-  }
+  // _getAllArticle() async {
+  //   ArticleApi articleApi = new ArticleApi();
+  //   List<Article> article = await articleApi.getAllArticle();
+  //   log("getAll Article");
+  //   // setState(() {
+  //   //   articleListView = article;
+  //   //   lenArticleList = article.length;
+  //   //   loading = false;
+  //   // });
+  // }
 
   @override
   Widget build(BuildContext context) {
+    log('Build at ' + DateTime.now().toString(),name: '[Article Screen]');
+    //final state = context.watch<ArticleProvider>();
+
+
     return Scaffold(
       body: Container(
         child: Stack(
@@ -158,71 +167,74 @@ class _articlePageState extends State<articlePage> {
                 ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.only(
-                top: 130.0,
-                left: 30.0,
-                right: 30.0,
-              ),
-              child: loading
-                  ? LoadingCubeGrid()
-                  : SmartRefresher(
-                      enablePullDown: true,
-                      enablePullUp: true,
-                      header: ClassicHeader(),
-                      footer: CustomFooter(
-                        builder: (BuildContext context, LoadStatus mode) {
-                          Widget body;
-                          if (mode == LoadStatus.idle) {
-                            body = Text("pull up load");
-                          } else if (mode == LoadStatus.loading) {
-                            body = CupertinoActivityIndicator();
-                          } else if (mode == LoadStatus.failed) {
-                            body = Text("Load Failed!Click retry!");
-                          } else if (mode == LoadStatus.canLoading) {
-                            body = Text("more article");
-                          } else {
-                            body = Text("No more Data");
-                          }
-                          return Container(
-                            height: 55.0,
-                            child: Center(child: body),
-                          );
-                        },
-                      ),
-                      controller: _refreshController,
-                      onRefresh: _onRefresh,
-                      onLoading: _onLoading,
-                      child: Container(
-                        child: ListView.builder(
-                          itemCount: articleListView.length > 10
-                              ? countItemListArticle
-                              : articleListView.length,
-                          shrinkWrap: true,
-                          physics: ScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () {
-                                print(articleListView[index].topic);
+            Consumer<ArticleProvider>(
+              builder: (BuildContext context, states, Widget child) => Container(
+                padding: EdgeInsets.only(
+                  top: 130.0,
+                  left: 30.0,
+                  right: 30.0,
+                ),
+                child: states.articleScreenLoading
+                    ? LoadingCubeGrid()
+                    : SmartRefresher(
+                  enablePullDown: true,
+                  enablePullUp: true,
+                  header: ClassicHeader(),
+                  footer: CustomFooter(
+                    builder: (BuildContext context, LoadStatus mode) {
+                      Widget body;
+                      if (mode == LoadStatus.idle) {
+                        body = Text("pull up load");
+                      } else if (mode == LoadStatus.loading) {
+                        body = CupertinoActivityIndicator();
+                      } else if (mode == LoadStatus.failed) {
+                        body = Text("Load Failed!Click retry!");
+                      } else if (mode == LoadStatus.canLoading) {
+                        body = Text("more article");
+                      } else {
+                        body = Text("No more Data");
+                      }
+                      return Container(
+                        height: 55.0,
+                        child: Center(child: body),
+                      );
+                    },
+                  ),
+                  controller: states.refreshController,
+                  onRefresh: states.onRefresh,
+                  onLoading: states.onLoading,
+                  child: Container(
+                    child: ListView.builder(
+                      itemCount: states.articleListView.length > 10
+                          ? states.countItemListArticle
+                          : states.articleListView.length,
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            print(states.articleListView[index].topic);
 
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ArticleDetailsPage(
-                                      article: articleListView[index],
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: ArticleTile(
-                                //Send List to Tile
-                                articleList: articleListView[index],
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ArticleDetailsPage(
+                                  article: states.articleListView[index],
+                                ),
                               ),
                             );
                           },
-                        ),
-                      ),
+                          child: ArticleTile(
+                            //Send List to Tile
+                            articleList: states.articleListView[index],
+                          ),
+                        );
+                      },
                     ),
+                  ),
+                ),
+              ),
+
             ),
           ],
         ),
@@ -230,28 +242,9 @@ class _articlePageState extends State<articlePage> {
     );
   }
 
-  _getAllArticle() async {
-    ArticleApi articleApi = new ArticleApi();
-    List<Article> article = await articleApi.getAllArticle();
-    log("getAll Article");
-    setState(() {
-      articleListView = article;
-      lenArticleList = article.length;
-      loading = false;
-    });
-  }
 
-  Future<List<Article>> _getAllArticleRefresh() async {
-    ArticleApi articleApi = new ArticleApi();
-    List<Article> article = await articleApi.getAllArticle();
-    return article;
-  }
 
-  Future<Null> _refresh() {
-    return _getAllArticleRefresh().then((article) {
-      setState(() => articleListView = article);
-    });
-  }
+
 }
 
 class ArticleTile extends StatelessWidget {
