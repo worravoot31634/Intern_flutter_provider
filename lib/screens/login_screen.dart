@@ -22,14 +22,10 @@ class _LoginScreen extends StatelessWidget {
   // final TextEditingController _ctrlUsername = TextEditingController();
   // final TextEditingController _ctrlPassword = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     log('Build at ' + DateTime.now().toString(), name: '[Login screen]');
-    /**
-     * status have 4 possible value =
-     * Idle, InProgress, Success, Failed
-     * **/
+
     //status = context.watch<LoginProvider>().loading;
 
     return Consumer<LoginProvider>(

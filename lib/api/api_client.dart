@@ -8,7 +8,7 @@ import 'package:provider_flutter_application/global.dart';
 
 part 'api_client.g.dart';
 
-@RestApi(baseUrl: "${API.BASE_API_URL}")
+@RestApi(baseUrl: "${Global.BASE_API_URL}")
 abstract class ApiClient {
   factory ApiClient(Dio dio) = _ApiClient;
 

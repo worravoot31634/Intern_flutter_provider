@@ -1,31 +1,29 @@
 import 'dart:developer';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_flutter_application/animation/LoadingCubeGridAnimation.dart';
-import 'package:provider_flutter_application/api/base_model.dart';
-import 'package:provider_flutter_application/api/user_api/article_api.dart';
 import 'package:provider_flutter_application/model/article.dart';
 
 import 'package:provider_flutter_application/global.dart';
 import 'package:provider_flutter_application/provider/article_provider.dart';
-import 'package:provider_flutter_application/screens/article_details_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:provider_flutter_application/screens/widgets/header_app.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ArticlePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: articlePage(),
+      body: _ArticlePage(),
     );
   }
 }
 
-class articlePage extends StatelessWidget {
+class _ArticlePage extends StatelessWidget {
   // List<Article> articleListView = new List<Article>();
   // int countItemListArticle = 10;
   // int lenArticleList;
@@ -93,13 +91,12 @@ class articlePage extends StatelessWidget {
     log('Build at ' + DateTime.now().toString(),name: '[Article Screen]');
     //final state = context.watch<ArticleProvider>();
 
-
     return Scaffold(
       body: Container(
         child: Stack(
           children: [
             Container(
-              color: Colors.white,
+              color: Colors.grey[100],
             ),
             Container(
               padding: EdgeInsets.symmetric(
@@ -109,41 +106,7 @@ class articlePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Image.asset(
-                        "assets/images/logo.png",
-                        width: 50,
-                        height: 50,
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Cube SoftTech",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'ubuntu',
-                              fontSize: 25,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      Image.asset(
-                        "assets/images/notification.png",
-                        height: 22,
-                      ),
-                      SizedBox(width: 16),
-                      Image.asset(
-                        "assets/images/menu.png",
-                        height: 22,
-                      ),
-                    ],
-                  ),
+                  headerApp(),
                   SizedBox(
                     height: 20,
                   ),
@@ -263,7 +226,7 @@ class ArticleTile extends StatelessWidget {
     //Initial Value
     articleId = articleList.articleId.toString();
     topic = articleList.topic;
-    imgAssetPath = API.BASE_API_URL + articleList.path;
+    imgAssetPath = Global.BASE_API_URL + articleList.path;
     timeCreate = articleList.timeCreate;
 
     return Container(
@@ -290,8 +253,10 @@ class ArticleTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
+                  AutoSizeText(
+
                     '$topic',
+                    maxLines: 2,
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -310,8 +275,9 @@ class ArticleTile extends StatelessWidget {
                       SizedBox(
                         width: 8,
                       ),
-                      Text(
+                      AutoSizeText(
                         '${dateStrToDateTime(timeCreate)}',
+                        maxLines: 1,
                         style: TextStyle(color: Colors.white, fontSize: 12,fontFamily: 'prompt',),
                       ),
                     ],

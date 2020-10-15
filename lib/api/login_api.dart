@@ -4,7 +4,7 @@ import 'package:provider_flutter_application/global.dart';
 
 class LoginApi {
   String endPoint = 'http://192.168.0.110:3000';
-  String key = API.API_ACCESS_KEY;
+  String key = Global.API_ACCESS_KEY;
 
   Future<http.Response> doLogin(String username, String password) {
     String _url = '$endPoint/$key/login';

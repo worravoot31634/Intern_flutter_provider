@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
+import 'package:get/get.dart';
+import '../article_screen.dart';
+import '../home_screen.dart';
+import 'package:provider_flutter_application/global.dart';
 
 class HomeWithSidebar extends StatelessWidget {
   @override
@@ -20,18 +23,24 @@ class _homeWithSidebarState extends State<homeWithSidebar>
     with TickerProviderStateMixin {
   bool sideBarActive = false;
   AnimationController rotationController;
+  BorderRadius sidebarRadius = BorderRadius.all(Radius.circular(0));
+
+  final screen = HomeScreen();
+
+
   @override
   void initState() {
-
     rotationController =
         AnimationController(duration: Duration(milliseconds: 200), vsync: this);
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff1f3f6),
+      backgroundColor: Colors.grey[300],
       body: Stack(
         children: [
           Column(
@@ -40,12 +49,12 @@ class _homeWithSidebarState extends State<homeWithSidebar>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    height: 150,
+                    height: 130,
                     width: MediaQuery.of(context).size.width * 0.6,
                     decoration: BoxDecoration(
                         borderRadius:
                             BorderRadius.only(bottomRight: Radius.circular(60)),
-                        color: Colors.black),
+                        color: Colors.red[800]),
                     child: Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -54,12 +63,13 @@ class _homeWithSidebarState extends State<homeWithSidebar>
                             width: 50,
                             height: 50,
                             decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xfff1f3f6),
-                                image: DecorationImage(
-                                    image:
-                                        AssetImage('assets/images/avatar4.png'),
-                                    fit: BoxFit.contain)),
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                              image: DecorationImage(
+                                  image:
+                                      AssetImage('assets/images/avatar4.png'),
+                                  fit: BoxFit.contain),
+                            ),
                           ),
                           SizedBox(
                             width: 10,
@@ -94,7 +104,12 @@ class _homeWithSidebarState extends State<homeWithSidebar>
                   children: [
                     navigatorTitle("Home", true),
                     navigatorTitle("Profile", false),
-                    navigatorTitle("Accounts", false),
+                    InkWell(
+                        onTap: () {
+                          closeSideBar();
+                          Get.toNamed('article');
+                        },
+                        child: navigatorTitle("Article", false)),
                     navigatorTitle("Transactions", false),
                     navigatorTitle("Stats", false),
                     navigatorTitle("Settings", false),
@@ -102,27 +117,33 @@ class _homeWithSidebarState extends State<homeWithSidebar>
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.power_settings_new,
-                      size: 30,
-                    ),
-                    Text(
-                      "Logout",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                    )
-                  ],
+              InkWell(
+                onTap: () {
+                  print('logout');
+                  Get.toNamed('/');
+                },
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.power_settings_new,
+                        size: 30,
+                      ),
+                      Text(
+                        "Logout",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w700),
+                      )
+                    ],
+                  ),
                 ),
               ),
               Container(
                 alignment: Alignment.bottomLeft,
                 padding: EdgeInsets.all(20),
                 child: Text(
-                  "Ver 2.0.1",
+                  "Ver ${Global.APP_VERSION}",
                   style: TextStyle(color: Colors.grey),
                 ),
               )
@@ -130,26 +151,30 @@ class _homeWithSidebarState extends State<homeWithSidebar>
           ),
           AnimatedPositioned(
             duration: Duration(milliseconds: 200),
-            left: (sideBarActive) ? MediaQuery.of(context).size.width * 0.6 : 0,
-            top: (sideBarActive) ? MediaQuery.of(context).size.height * 0.2 : 0,
+            left: (sideBarActive) ? MediaQuery.of(context).size.width * 0.5 : 0,
+            top:
+                (sideBarActive) ? MediaQuery.of(context).size.height * 0.15 : 0,
             child: RotationTransition(
               turns: (sideBarActive)
-                  ? Tween(begin: -0.05, end: 0.0).animate(rotationController)
-                  : Tween(begin: 0.0, end: -0.05).animate(rotationController),
+                  ? Tween(begin: -0.00, end: 0.0).animate(rotationController)
+                  : Tween(begin: 0.0, end: -0.00).animate(rotationController),
               child: AnimatedContainer(
                 duration: Duration(milliseconds: 200),
                 height: (sideBarActive)
-                    ? MediaQuery.of(context).size.height * 0.7
+                    ? MediaQuery.of(context).size.height * 0.8
                     : MediaQuery.of(context).size.height,
                 width: (sideBarActive)
                     ? MediaQuery.of(context).size.width * 0.8
                     : MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(40)),
+                    borderRadius: sidebarRadius,
                     color: Colors.white),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(40)),
-                  child: HomeScreen(),
+                child: InkWell(
+                  onTap: closeSideBar,
+                  child: ClipRRect(
+                    borderRadius: sidebarRadius,
+                    child: screen,
+                  ),
                 ),
               ),
             ),
@@ -171,11 +196,13 @@ class _homeWithSidebarState extends State<homeWithSidebar>
                     onTap: openSideBar,
                     child: Container(
                       margin: EdgeInsets.all(17),
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('assets/images/menu.png'))),
+                      height: 50,
+                      // decoration: BoxDecoration(
+                      //     image: DecorationImage(
+                      //   image: AssetImage(
+                      //     'assets/images/menu.png',
+                      //   ),
+                      // )),
                     ),
                   ),
           )
@@ -213,11 +240,13 @@ class _homeWithSidebarState extends State<homeWithSidebar>
 
   void closeSideBar() {
     sideBarActive = false;
+    sidebarRadius = BorderRadius.all(Radius.circular(0));
     setState(() {});
   }
 
   void openSideBar() {
     sideBarActive = true;
+    sidebarRadius = BorderRadius.all(Radius.circular(40));
     setState(() {});
   }
 }

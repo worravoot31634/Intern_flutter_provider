@@ -94,7 +94,6 @@ class HomeProvider with ChangeNotifier {
       }
     });
 
-
     initState();
   }
 
@@ -117,6 +116,13 @@ class HomeProvider with ChangeNotifier {
     await workHourApi.getLastCheckInById(await pref.getId());
     _lastDateCheckInStr = workHours.workHoursTimeWork;
     _initLoading = false; //disabled Home Screen loading
+    notifyListeners();
+  }
+  
+  void setDateTime() {
+    _dateStr = getCurrentDate();
+    _timeStr = getCurrentTime();
+    log('{_dateStr: $_dateStr, _timeStr: $_timeStr}',name:'setDateTime');
     notifyListeners();
   }
 
@@ -219,12 +225,7 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setDateTime() {
-    _dateStr = getCurrentDate();
-    _timeStr = getCurrentTime();
-    log('{_dateStr: $_dateStr, _timeStr: $_timeStr}',name:'setDateTime');
-    notifyListeners();
-  }
+
 
   String getCurrentTime() {
     return _formatTime(DateTime.now());

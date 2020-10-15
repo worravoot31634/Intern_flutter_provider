@@ -6,7 +6,7 @@ import 'package:provider_flutter_application/global.dart';
 
 class UserService {
   Future<User> getUserByIdAndPassword(String username, String password) async {
-    String _url = '${API.BASE_API_URL}/ms-user-login'; //api_url + api_key
+    String _url = '${Global.BASE_API_URL}/ms-user-login'; //api_url + api_key
     print(_url);
 
     // var body =
@@ -27,7 +27,7 @@ class UserService {
   }
 
   Future<User> getUserByIdTest(String username, String password) async {
-    String _url = '${API.BASE_API_URL}/ms-user-login'; //api_url + api_key
+    String _url = '${Global.BASE_API_URL}/ms-user-login'; //api_url + api_key
     print(_url);
 
     Response response;

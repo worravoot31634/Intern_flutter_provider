@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,31 +16,30 @@ class ArticleDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      body: Get.arguments != null ? articleDetailsPage(article: Get.arguments) : Text('ERROR send Data!'),
+      body: Get.arguments != null ? _ArticleDetailsPage(article: Get.arguments) : Text('ERROR send Data!'),
     );
   }
 }
 
-class articleDetailsPage extends StatelessWidget {
+class _ArticleDetailsPage extends StatelessWidget {
 
-  articleDetailsPage({this.article});
+  _ArticleDetailsPage({this.article});
 
-  Article article;
-  String articleId;
-  String topic;
-  String writer;
-  String timeCreate;
-  String imgAssetPath;
-  Article articleList;
-
+  final Article article;
 
   @override
   Widget build(BuildContext context) {
+    String articleId;
+    String topic;
+    String writer;
+    String timeCreate;
+    String imgAssetPath;
+    Article articleList;
     //Initial Value
     articleId = article.articleId.toString();
     topic = article.topic;
     writer = article.userCreate;
-    imgAssetPath = API.BASE_API_URL + article.path;
+    imgAssetPath = Global.BASE_API_URL + article.path;
     timeCreate = article.timeCreate;
 
     return Scaffold(
@@ -98,8 +98,9 @@ class articleDetailsPage extends StatelessWidget {
                   Container(
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(
+                      child: AutoSizeText(
                         topic,
+                        maxLines: 2,
                         style: TextStyle(
                           fontSize: 21,
                           fontWeight: FontWeight.w800,

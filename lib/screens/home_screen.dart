@@ -23,6 +23,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:provider/provider.dart';
 
+import 'article_screen.dart';
+import 'side_bar/home_with_side_bar.dart';
+import 'late_checkIn_screen.dart';
+
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
 
@@ -30,20 +34,21 @@ FlutterLocalNotificationsPlugin();
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: homeScreen(), debugShowCheckedModeBanner: false);
+    return MaterialApp(home: _HomeScreen(), debugShowCheckedModeBanner: false);
   }
 }
 
-class homeScreen extends StatelessWidget {
+// ignore: must_be_immutable
+class _HomeScreen extends StatelessWidget {
   //Google Map
   Completer<GoogleMapController> _controller = Completer();
   LocationData currentLocation;
 
   //Notification
-  String message;
+  String message = 'No message.';
   String channelId;
-  String channelName = "FLUTTER_NOTIFICATION_CHANNEL";
-  String channelDescription = "FLUTTER_NOTIFICATION_CHANNEL_DETAIL";
+  String channelName = 'FLUTTER_NOTIFICATION_CHANNEL';
+  String channelDescription = 'FLUTTER_NOTIFICATION_CHANNEL_DETAIL';
 
   double latitude;
   double longitude;
@@ -51,20 +56,11 @@ class homeScreen extends StatelessWidget {
   String userAgent;
   String ipAddress;
 
-  //bool statusCheckIn;
-  // Timer timer;
-  // Color colorButtonCheckIn;
-  // String textButtonCheckIn;
-  // String lastDateCheckIn;
-  // String checkInType;
-
   @override
   Widget build(BuildContext context) {
     log('Build at ' + DateTime.now().toString(),name: '[Home Screen]');
-    final state = context.watch<HomeProvider>();
+    //final state = context.watch<HomeProvider>();
 
-
-    message = "No message.";
 
     var initializationSettingsAndroid = AndroidInitializationSettings('logo');
 
@@ -96,8 +92,6 @@ class homeScreen extends StatelessWidget {
             child: Stack(
               children: [
                 Container(
-                  color: Colors.white,
-                  child: Container(
                     color: Colors.grey[100],
                     padding: EdgeInsets.symmetric(
                       vertical: 30,
@@ -131,9 +125,37 @@ class homeScreen extends StatelessWidget {
                               ],
                             ),
                             Spacer(),
-                            Image.asset(
-                              "assets/images/notification.png",
-                              height: 22,
+                            Stack(
+                              children: [
+                                Icon(
+                                  Icons.notifications,
+                                  color: Colors.black,
+                                  size: 30,
+                                ),
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  alignment: Alignment.topRight,
+                                  margin: EdgeInsets.only(top: 5),
+                                  child: Container(
+                                    width: 15,
+                                    height: 15,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Color(0xffc32c37),
+                                        border: Border.all(color: Colors.white, width: 1)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(0.0),
+                                      child: Center(
+                                        child: Text(
+                                          '2',
+                                          style: TextStyle(fontSize: 10,color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             SizedBox(width: 16),
                             Image.asset(
@@ -244,7 +266,6 @@ class homeScreen extends StatelessWidget {
                                       : RaisedButton(
                                     onPressed: () async {
                                       states.setCurrentLocation();
-
 
 
                                       currentLocation =
@@ -361,7 +382,7 @@ class homeScreen extends StatelessWidget {
                               serviceWidget('question.png', 'Work\nHistory'),
                               serviceWidget('question.png', 'Check\nList'),
                               serviceWidget('question.png', 'Travel\n'),
-                              serviceWidget('question.png', 'Borrow\n'),
+                              serviceWidget('question.png', 'SideBarTest\n'),
                               serviceWidget('question.png', 'Map\n'),
                               serviceWidget('more.png', 'More\n'),
                             ],
@@ -370,7 +391,7 @@ class homeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
+
               ],
             ),
           )
@@ -382,6 +403,7 @@ class homeScreen extends StatelessWidget {
   }
 
   Column serviceWidget(String img, String name) {
+    log('name is $name', name: 'serviceWidget');
     return Column(
       children: [
         Expanded(
@@ -390,8 +412,9 @@ class homeScreen extends StatelessWidget {
               switch (name) {
                 case "Late\nCheck In":
                   {
-                    print("Check In click");
-                    Get.toNamed('lateCheckIn');
+                    log("Late Check In click");
+                    //Get.toNamed('lateCheckIn');
+                    //Get.toNamed('lateCheckIn');
                   }
                   break;
 
@@ -399,15 +422,23 @@ class homeScreen extends StatelessWidget {
                   {
                     print("Article click");
                     Get.toNamed('article');
+                    //Get.toNamed('article');
                   }
                   break;
 
                 case "Map\n":
                   {
                     print('Map clicked');
+                    Get.toNamed('sideBar',arguments: HomeWithSidebar());
+                    //Get.toNamed('menu');
                   }
                   break;
-
+                case "SideBarTest\n":
+                  {
+                    print('SideBarTest clicked');
+                    Get.toNamed('sideBar',arguments: ArticlePage());
+                  }
+                  break;
                 default:
                   {
                     print("default");

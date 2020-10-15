@@ -7,271 +7,273 @@ import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 
 // import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:provider_flutter_application/provider/late_checkin_provider.dart';
 
 class LateCheckIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: lateCheckIn(),
+      body: _LateCheckIn(),
     );
   }
 }
 
-class lateCheckIn extends StatefulWidget {
-  @override
-  _lateCheckInPageState createState() => _lateCheckInPageState();
-}
+class _LateCheckIn extends StatelessWidget {
 
-class _lateCheckInPageState extends State<lateCheckIn> {
-  String _date = "Not set";
-  String _time = "Not set";
-  DateTime _firstDateSelect = DateTime(
-    DateTime.now().year,
-    1,
-    1,
-  );
-  DateTime _lastDateSelect = DateTime(DateTime.now().year, DateTime.now().month,
-      DateTime.now().day, 23, 59, 59);
-  DateTime _initialDate = DateTime.now();
+  // String _date = "Not set";
+  // String _time = "Not set";
+  // DateTime _firstDateSelect = DateTime(
+  //   DateTime.now().year,
+  //   1,
+  //   1,
+  // );
+  // DateTime _lastDateSelect = DateTime(DateTime.now().year, DateTime.now().month,
+  //     DateTime.now().day, 23, 59, 59);
+  // DateTime _initialDate = DateTime.now();
 
-  @override
-  void initState() {
-    _time = DateFormat("HH:mm").format(DateTime.now());
-    _date = DateFormat("d MMM yyyy").format(DateTime.now());
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   _time = DateFormat("HH:mm").format(DateTime.now());
+  //   _date = DateFormat("d MMM yyyy").format(DateTime.now());
+  //   super.initState();
+  // }
 
-  TimeOfDay timeSelect = TimeOfDay.now();
+  //TimeOfDay timeSelect = TimeOfDay.now();
 
-  void onTimeChanged(TimeOfDay newTime) {
-    setState(() {
-      timeSelect = newTime;
-      final now = new DateTime.now();
-      DateTime time =
-          DateTime(now.year, now.month, now.day, newTime.hour, newTime.minute);
-      _time = DateFormat("HH:mm").format(time);
-    });
-  }
+  // void onTimeChanged(TimeOfDay newTime) {
+  //   setState(() {
+  //     timeSelect = newTime;
+  //     final now = new DateTime.now();
+  //     DateTime time =
+  //         DateTime(now.year, now.month, now.day, newTime.hour, newTime.minute);
+  //     _time = DateFormat("HH:mm").format(time);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Stack(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(
-                vertical: 30,
-                horizontal: 30,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Image.asset(
-                        "assets/images/logo.png",
-                        width: 50,
-                        height: 50,
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Cube SoftTech",
+    log('Build at ' + DateTime.now().toString(), name: '[LateCheckIn screen]');
+    return Consumer<LateCheckInProvider>(
+        builder: (BuildContext context, states, Widget child) {
+      return Scaffold(
+        body: Container(
+          child: Stack(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 30,
+                  horizontal: 30,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Image.asset(
+                          "assets/images/logo.png",
+                          width: 50,
+                          height: 50,
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Cube SoftTech",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'ubuntu',
+                                fontSize: 25,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        Image.asset(
+                          "assets/images/notification.png",
+                          height: 22,
+                        ),
+                        SizedBox(width: 16),
+                        Image.asset(
+                          "assets/images/menu.png",
+                          height: 22,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: [
+                        Image.asset(
+                          "assets/images/clock_black.png",
+                          height: 22,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Center(
+                          child: Text(
+                            "Late Check In",
                             style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'ubuntu',
-                              fontSize: 25,
-                              fontWeight: FontWeight.w700,
-                            ),
+                                fontSize: 21,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: 'avenir'),
                           ),
-                        ],
-                      ),
-                      Spacer(),
-                      Image.asset(
-                        "assets/images/notification.png",
-                        height: 22,
-                      ),
-                      SizedBox(width: 16),
-                      Image.asset(
-                        "assets/images/menu.png",
-                        height: 22,
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      Image.asset(
-                        "assets/images/clock_black.png",
-                        height: 22,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Center(
-                        child: Text(
-                          "Late Check In",
-                          style: TextStyle(
-                              fontSize: 21,
-                              fontWeight: FontWeight.w800,
-                              fontFamily: 'avenir'),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
 
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        child: Text(
-                          "Choose Date",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 20),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          child: Text(
+                            "Choose Date",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 20),
+                          ),
                         ),
-                      ),
-                      Container(
-                        child: Text(
-                          "Choose Time",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 20),
+                        Container(
+                          child: Text(
+                            "Choose Time",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 20),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 80,
-                        child: Center(
-                          child: RaisedButton(
-                            onPressed: () async {
-                              _showDatePicker();
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                            ),
-                            color: Color(0xff29404E),
-                            /*Color.fromRGBO(15, 129, 68, 1),*/
-                            child: Center(
-                              child: Text(
-                                _date,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 30,
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 80,
+                          child: Center(
+                            child: RaisedButton(
+                              onPressed: () async {
+                                _showDatePicker(context, states);
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                              ),
+                              color: Color(0xff29404E),
+                              /*Color.fromRGBO(15, 129, 68, 1),*/
+                              child: Center(
+                                child: Text(
+                                  states.date,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 30,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Container(
-                        height: 80,
-                        child: RaisedButton(
-                          onPressed: () async {
-                            Navigator.of(context).push(
-                              showPicker(
-                                context: context,
-                                borderRadius: 16,
-                                value: timeSelect,
-                                is24HrFormat: true,
-                                onChange: onTimeChanged,
-                                // onChangeDateTime: (DateTime dateTime) {
-                                //   print(dateTime);
-                                // },
-                              ),
-                            );
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ),
-                          color: Color(0xff29404E),
-                          /*Color.fromRGBO(15, 76, 129, 1),*/
-                          child: Container(
-                            child: Text(
-                              _time,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 40,
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Container(
+                          height: 80,
+                          child: RaisedButton(
+                            onPressed: () async {
+                              Navigator.of(context).push(
+                                showPicker(
+                                  context: context,
+                                  borderRadius: 16,
+                                  value: states.defaultTime,
+                                  is24HrFormat: true,
+                                  onChange: states.onTimeChanged,
+                                  // onChangeDateTime: (DateTime dateTime) {
+                                  //   print(dateTime);
+                                  // },
+                                ),
+                              );
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                            color: Color(0xff29404E),
+                            /*Color.fromRGBO(15, 76, 129, 1),*/
+                            child: Container(
+                              child: Text(
+                                states.time,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 40,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
+                      ],
                     ),
-                    child: TextField(
-                      style: TextStyle(fontSize: 22.0, color: Colors.red),
-                      keyboardType: TextInputType.multiline,
-                      maxLines: 3,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Description",
-                        hintStyle: TextStyle(color: Colors.grey[400]),
+                    SizedBox(height: 20),
+                    Container(
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      // controller: _ctrlUsername,
+                      child: TextField(
+                        style: TextStyle(fontSize: 22.0, color: Colors.red),
+                        keyboardType: TextInputType.multiline,
+                        maxLines: 3,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Description",
+                          hintStyle: TextStyle(color: Colors.grey[400]),
+                        ),
+                        // controller: _ctrlUsername,
+                      ),
                     ),
-                  ),
-                  // InkWell(
-                  //   onTap: () {},
-                  //   child: Container(
-                  //     height: 80,
-                  //     decoration: BoxDecoration(
-                  //       borderRadius: BorderRadius.circular(10),
-                  //       gradient: LinearGradient(
-                  //         colors: [
-                  //           Color.fromRGBO(15, 76, 129, 1),
-                  //           Color.fromRGBO(15, 76, 129, .9),
-                  //           Color.fromRGBO(15, 76, 129, .5),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     child: Center(
-                  //       child: Text(
-                  //         _time,
-                  //         style: TextStyle(
-                  //           color: Colors.white,
-                  //           fontWeight: FontWeight.w500,
-                  //           fontSize: 40,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                ],
+                    // InkWell(
+                    //   onTap: () {},
+                    //   child: Container(
+                    //     height: 80,
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(10),
+                    //       gradient: LinearGradient(
+                    //         colors: [
+                    //           Color.fromRGBO(15, 76, 129, 1),
+                    //           Color.fromRGBO(15, 76, 129, .9),
+                    //           Color.fromRGBO(15, 76, 129, .5),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     child: Center(
+                    //       child: Text(
+                    //         _time,
+                    //         style: TextStyle(
+                    //           color: Colors.white,
+                    //           fontWeight: FontWeight.w500,
+                    //           fontSize: 40,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
-  _showDatePicker() async {
+  _showDatePicker(BuildContext context, LateCheckInProvider states) {
     return showRoundedDatePicker(
       context: context,
       height: MediaQuery.of(context).size.height * 0.3,
@@ -282,20 +284,20 @@ class _lateCheckInPageState extends State<lateCheckIn> {
       onTapDay: (DateTime dateTime, bool available) {
         print("return $available");
         if (available == true) {
-          setState(() {
-            _date = DateFormat("dd MMM yyyy").format(dateTime);
-            _initialDate = dateTime;
-          });
+          states.onDateChanged(dateTime);
+          // setState(() {
+            // _date = DateFormat("dd MMM yyyy").format(dateTime);
+            // _initialDate = dateTime;
+          // });
           Navigator.of(context, rootNavigator: true).pop();
         }
         return available;
       },
       textPositiveButton: "CANCEL",
       textNegativeButton: "",
-
-      initialDate: _initialDate,
-      firstDate: _firstDateSelect,
-      lastDate: _lastDateSelect,
+      initialDate: states.defaultDate,
+      firstDate: states.firstDateSelectable,
+      lastDate: states.lastDateSelectable,
       //yyyy-mm-dd
       borderRadius: 16,
     );
