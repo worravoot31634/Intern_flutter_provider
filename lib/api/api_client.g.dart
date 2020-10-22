@@ -166,6 +166,26 @@ class _ApiClient implements ApiClient {
   }
 
   @override
+  lateCheckInAndOut(workHours) async {
+    ArgumentError.checkNotNull(workHours, 'workHours');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(workHours?.toJson() ?? <String, dynamic>{});
+    final Response<String> _result = await _dio.request('/ms-lateCheckIn',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            contentType: 'application/x-www-form-urlencoded',
+            baseUrl: baseUrl),
+        data: _data);
+    final value = _result.data;
+    return value;
+  }
+
+  @override
   getLastCheckInById(user) async {
     ArgumentError.checkNotNull(user, 'user');
     const _extra = <String, dynamic>{};

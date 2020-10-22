@@ -14,16 +14,16 @@ import 'package:intl/intl.dart';
 import 'package:provider_flutter_application/screens/widgets/header_app.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class ArticlePage extends StatelessWidget {
+class ArticleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _ArticlePage(),
+      body: _ArticleScreen(),
     );
   }
 }
 
-class _ArticlePage extends StatelessWidget {
+class _ArticleScreen extends StatelessWidget {
   // List<Article> articleListView = new List<Article>();
   // int countItemListArticle = 10;
   // int lenArticleList;

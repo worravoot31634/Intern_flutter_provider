@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+
 import 'package:provider_flutter_application/api/user_api/user_api.dart';
 import 'package:provider_flutter_application/api/user_api/work_hours_api.dart';
 import 'package:provider_flutter_application/model/user.dart';
@@ -7,7 +8,8 @@ import 'package:provider_flutter_application/model/work_hours.dart';
 import 'package:provider_flutter_application/shared_preferences/SharedPref.dart';
 
 class UserAction {
-  Future<bool> doLoginAction(String username, String password) async {
+
+  Future<bool> doLogin(String username, String password) async {
     try {
       //call service
       UserApi userApi = new UserApi();
@@ -50,7 +52,6 @@ class UserAction {
     WorkHoursApi workHourApi = new WorkHoursApi();
     List<WorkHours> workHours = await workHourApi.getTodayCheckInById(id);
 
-
     if (workHours.isNotEmpty) {
       return true;
     } else {
@@ -61,9 +62,7 @@ class UserAction {
   Future<bool> getStatusCheckOutToDay(String id) async {
     //get work hours
     WorkHoursApi workHourApi = new WorkHoursApi();
-    List<WorkHours> workHours =
-    await workHourApi.getTodayCheckOutById(id);
-
+    List<WorkHours> workHours = await workHourApi.getTodayCheckOutById(id);
 
     if (workHours.isNotEmpty) {
       return true;

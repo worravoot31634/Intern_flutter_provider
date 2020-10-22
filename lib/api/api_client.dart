@@ -44,6 +44,10 @@ abstract class ApiClient {
   @FormUrlEncoded()
   Future<String> checkInAndOut(@Body() WorkHours workHours);
 
+  @POST("/ms-lateCheckIn")
+  @FormUrlEncoded()
+  Future<String> lateCheckInAndOut(@Body() WorkHours workHours);
+
   @POST("/ms-workhours-last-checkIn")
   @FormUrlEncoded()
   Future<WorkHours> getLastCheckInById(@Body() User user);

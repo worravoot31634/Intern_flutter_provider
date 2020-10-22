@@ -1,29 +1,30 @@
-import 'dart:developer';
+
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider_flutter_application/global.dart';
 import 'package:provider_flutter_application/model/article.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
+import 'package:provider_flutter_application/screens/widgets/header_app.dart';
 
-import '../global.dart';
 
-class ArticleDetailsPage extends StatelessWidget {
+class ArticleDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      body: Get.arguments != null ? _ArticleDetailsPage(article: Get.arguments) : Text('ERROR send Data!'),
+      body: Get.arguments != null ? _ArticleDetailsScreen(article: Get.arguments) : Text('ERROR send Data!'),
     );
   }
 }
 
-class _ArticleDetailsPage extends StatelessWidget {
+class _ArticleDetailsScreen extends StatelessWidget {
 
-  _ArticleDetailsPage({this.article});
+  _ArticleDetailsScreen({this.article});
 
   final Article article;
 
@@ -57,41 +58,7 @@ class _ArticleDetailsPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Image.asset(
-                        "assets/images/logo.png",
-                        width: 50,
-                        height: 50,
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Cube SoftTech",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'ubuntu',
-                              fontSize: 25,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      Image.asset(
-                        "assets/images/notification.png",
-                        height: 22,
-                      ),
-                      SizedBox(width: 16),
-                      Image.asset(
-                        "assets/images/menu.png",
-                        height: 22,
-                      ),
-                    ],
-                  ),
+                  headerApp(),
                   SizedBox(
                     height: 20,
                   ),

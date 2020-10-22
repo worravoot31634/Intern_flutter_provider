@@ -4,21 +4,21 @@ import 'dart:io';
 
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
 import 'package:get_ip/get_ip.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
-import 'package:provider_flutter_application/action/user_action.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:provider_flutter_application/action/implement/user_action.dart';
 import 'package:provider_flutter_application/api/user_api/work_hours_api.dart';
 import 'package:provider_flutter_application/model/work_hours.dart';
-import 'package:provider_flutter_application/screens/home_screen.dart';
 import 'package:provider_flutter_application/shared_preferences/SharedPref.dart';
 
-
-
 class HomeProvider with ChangeNotifier {
-
+  Completer<GoogleMapController> _mapController = Completer();
 
   String _id;
   bool _statusCheckIn;
@@ -35,6 +35,7 @@ class HomeProvider with ChangeNotifier {
   bool _initLoading;
   bool _latLongLoading = true;
   String _btnStatus;
+  Timer timer;
 
   //Notification
   String _notifyMessage;
@@ -42,65 +43,20 @@ class HomeProvider with ChangeNotifier {
   String _notifyChannelName = "FLUTTER_NOTIFICATION_CHANNEL";
   String _notifyChannelDescription = "FLUTTER_NOTIFICATION_CHANNEL_DETAIL";
 
-
-  String get id => _id;
-
-  bool get statusCheckIn => _statusCheckIn;
-
-  double get latitude => _latitude;
-
-  double get longitude => _longitude;
-
-  String get nameStr => _nameStr;
-
-  String get timeStr => _timeStr;
-
-  String get dateStr => _dateStr;
-
-  String get lastDateCheckInStr => _lastDateCheckInStr;
-
-  String get ipAddress => _ipAddress;
-
-  String get userAgent => _userAgent;
-
-  WorkHours get workHours => _workHours;
-
-  Timer get time => _time;
-
-  bool get initLoading => _initLoading;
-
-  bool get latLongLoading => _latLongLoading;
-
-  String get btnStatus => _btnStatus;
-
-  String get notifyMessage => _notifyMessage;
-
-  String get notifyChannelId => _notifyChannelId;
-
-  String get notifyChannelName => _notifyChannelName;
-
-  String get notifyChannelDescription => _notifyChannelDescription;
-
-  LocationData currentLocation;
+  Completer<GoogleMapController> get mapController => _mapController;
   UserAction userAction = new UserAction();
   WorkHoursApi workHourApi = new WorkHoursApi();
 
   HomeProvider() {
-    log('Init',name: 'HomeProvider');
-
-    Timer.periodic(Duration(seconds: 1), (Timer t) {
-      if(_formatTime(DateTime.now()) != _timeStr){
-        setDateTime();
-      }
-    });
-
+    log('Init', name: 'HomeProvider');
     initState();
   }
 
   void initState() async {
+    startTimer(); //start counting dateTime
     _initLoading = true;
     SharedPref pref = new SharedPref();
-    currentLocation = await getCurrentLocation();
+    LocationData currentLocation = await getCurrentLocation();
 
     _id = await pref.getId();
     _nameStr = await pref.getName();
@@ -112,68 +68,82 @@ class HomeProvider with ChangeNotifier {
     _userAgent = await getUserAgent();
     updateButton();
 
-    WorkHours workHours =
-    await workHourApi.getLastCheckInById(await pref.getId());
+    WorkHours workHours = await workHourApi.getLastCheckInById(await pref.getId());
     _lastDateCheckInStr = workHours.workHoursTimeWork;
+    _lastDateCheckInStr = formattedDateToString(convertStringToDate(_lastDateCheckInStr));
+
     _initLoading = false; //disabled Home Screen loading
     notifyListeners();
   }
-  
+
+  startTimer(){
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      if (_formatTime(DateTime.now()) != _timeStr) {
+        setDateTime();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    log('HomeProvider disposed', name: '[HomeProvider]');
+    timer.cancel();
+    super.dispose();
+  }
+
+  void confirmCheckIn({@required String checkInType}) async {
+    String actionType;
+    if (checkInType == '1') {
+      actionType = 'Check-In';
+    } else if (checkInType == '2') {
+      actionType = 'Check-Out';
+    } else {
+      actionType = "Error";
+    }
+    LocationData currentLocation = await getCurrentLocation();
+    _latitude = currentLocation.latitude;
+    _longitude = currentLocation.longitude;
+    WorkHoursApi workHoursApi = new WorkHoursApi();
+    WorkHours workHours = new WorkHours();
+    workHours.userCreate = _id;
+    workHours.workHoursType = checkInType;
+    workHours.latitude = _latitude.toString();
+    workHours.longitude = _longitude.toString();
+    workHours.userAgent = _userAgent;
+    workHours.ipAddress = _ipAddress;
+
+    String status = await workHoursApi.checkInAndOut(workHours);
+    if (status == "success") {
+      Get.back();
+      showSimpleNotification(Text("$actionType success!"),
+          duration: Duration(seconds: 4), background: Colors.green);
+
+      //refresh button and last check-in
+      if (checkInType == '1') setLastCheckIn();
+      updateButton();
+
+    } else {
+      showSimpleNotification(Text("$actionType failed!"),
+          duration: Duration(seconds: 3), background: Colors.green);
+    }
+  }
+
+
   void setDateTime() {
     _dateStr = getCurrentDate();
     _timeStr = getCurrentTime();
-    log('{_dateStr: $_dateStr, _timeStr: $_timeStr}',name:'setDateTime');
+    log('{_dateStr: $_dateStr, _timeStr: $_timeStr}', name: 'setDateTime');
     notifyListeners();
   }
-
-  void initNotification(){
-    _notifyMessage = "No message.";
-
-    var initializationSettingsAndroid = AndroidInitializationSettings('logo');
-    var initializationSettingsIOS = IOSInitializationSettings(
-        onDidReceiveLocalNotification: (id, title, body, payload) {
-          print("onDidReceiveLocalNotification called. $payload");
-          return null;
-        });
-    var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
-
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (payload) {
-          // when user tap on notification.
-          print("onSelectNotification called.");
-          return null;
-        });
-  }
-
-  sendNotification(int id, String actionType) async {
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        _notifyChannelId, _notifyChannelName, _notifyChannelDescription,
-        importance: Importance.Max, priority: Priority.High);
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-
-    var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-
-    DateFormat formatter = DateFormat('d MMMM yyyy HH:mm');
-    String formatted = formatter.format(DateTime.now());
-    await flutterLocalNotificationsPlugin.show(
-        id,
-        'Cube SoftTech Notifications',
-        'You $actionType at $formatted',
-        platformChannelSpecifics,
-        payload: 'I just haven\'t Met You Yet');
-  }
-
 
   void updateButton() async {
     _btnStatus = null;
     notifyListeners();
     SharedPref pref = new SharedPref();
     bool checkinToday =
-    await userAction.getStatusCheckInToDay(await pref.getId());
+        await userAction.getStatusCheckInToDay(await pref.getId());
     bool checkoutToday =
-    await userAction.getStatusCheckOutToDay(await pref.getId());
+        await userAction.getStatusCheckOutToDay(await pref.getId());
     //_statusCheckIn = checkinToday;
     /* *
      * [Possible case]
@@ -202,8 +172,10 @@ class HomeProvider with ChangeNotifier {
     WorkHoursApi workHourApi = new WorkHoursApi();
     SharedPref pref = new SharedPref();
     WorkHours workHours =
-    await workHourApi.getLastCheckInById(await pref.getId());
+        await workHourApi.getLastCheckInById(await pref.getId());
     _lastDateCheckInStr = workHours.workHoursTimeWork;
+    _lastDateCheckInStr =
+        formattedDateToString(convertStringToDate(_lastDateCheckInStr));
     notifyListeners();
   }
 
@@ -224,8 +196,6 @@ class HomeProvider with ChangeNotifier {
     _statusCheckIn = await userAction.getStatusCheckInToDay(await pref.getId());
     notifyListeners();
   }
-
-
 
   String getCurrentTime() {
     return _formatTime(DateTime.now());
@@ -274,4 +244,50 @@ class HomeProvider with ChangeNotifier {
   }
 
 
+
+  convertStringToDate(String mdyFullString) {
+    return DateFormat('MMM dd, yyyy hh:mm:ss a').parse(mdyFullString);
+  }
+
+  formattedDateToString(DateTime date) {
+    return DateFormat("dd MMMM yyyy 'at' hh:mm").format(date);
+  }
+
+  String get id => _id;
+
+  bool get statusCheckIn => _statusCheckIn;
+
+  double get latitude => _latitude;
+
+  double get longitude => _longitude;
+
+  String get nameStr => _nameStr;
+
+  String get timeStr => _timeStr;
+
+  String get dateStr => _dateStr;
+
+  String get lastDateCheckInStr => _lastDateCheckInStr;
+
+  String get ipAddress => _ipAddress;
+
+  String get userAgent => _userAgent;
+
+  WorkHours get workHours => _workHours;
+
+  Timer get time => _time;
+
+  bool get initLoading => _initLoading;
+
+  bool get latLongLoading => _latLongLoading;
+
+  String get btnStatus => _btnStatus;
+
+  String get notifyMessage => _notifyMessage;
+
+  String get notifyChannelId => _notifyChannelId;
+
+  String get notifyChannelName => _notifyChannelName;
+
+  String get notifyChannelDescription => _notifyChannelDescription;
 }

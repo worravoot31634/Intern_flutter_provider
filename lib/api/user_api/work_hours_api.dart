@@ -17,7 +17,7 @@ class WorkHoursApi {
     apiClient = new ApiClient(dio);
   }
 
-  Future<BaseModel<String>> checkInAndOut(WorkHours workHours) async {
+  Future<String> checkInAndOut(WorkHours workHours) async {
     String response;
     //log("send: " + workHours.toJson().toString());
 
@@ -29,9 +29,23 @@ class WorkHoursApi {
       //print("checkIn status from server :" + response);
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");
-      return BaseModel()..setException(ServerError.withError(error: error));
     }
-    return BaseModel()..data = response;
+    return response;
+  }
+
+  Future<String> lateCheckInAndOut(WorkHours workHours) async {
+    String response;
+
+    try {
+      response = await apiClient.lateCheckInAndOut(workHours);
+      Map<String, dynamic> statusCheckIn = jsonDecode(response);
+      //log("status CheckIn: " + statusCheckIn['status']);
+      response = statusCheckIn['status'];
+      //print("checkIn status from server :" + response);
+    } catch (error, stacktrace) {
+      print("Exception occurred: $error stackTrace: $stacktrace");
+    }
+    return response;
   }
 
   Future<BaseModel<List<WorkHours>>> getWorkHoursById(String id) async {

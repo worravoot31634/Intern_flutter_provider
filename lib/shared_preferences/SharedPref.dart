@@ -5,7 +5,8 @@ class SharedPref {
   String _name;
   String _roleId;
   String _departmentId;
-
+  String _token;
+  String _tokenDateExpired;
 
 
   Future<String> getId() async {
@@ -51,4 +52,27 @@ class SharedPref {
     final storage = new FlutterSecureStorage();
     await storage.write(key: 'departmentId', value: departmentId);
   }
+
+  Future<String> getToken() async {
+    final storage = new FlutterSecureStorage();
+    _token = await storage.read(key: 'token') ?? null;
+    return _token;
+  }
+
+  Future<void> setToken(String token) async {
+    final storage = new FlutterSecureStorage();
+    await storage.write(key: 'token', value: token);
+  }
+
+  Future<String> getTokenDateExpired() async {
+    final storage = new FlutterSecureStorage();
+    _tokenDateExpired = await storage.read(key: 'tokenDateExpired') ?? null;
+    return _tokenDateExpired;
+  }
+
+  Future<void> setTokenDateExpired(String tokenDateExpired) async {
+    final storage = new FlutterSecureStorage();
+    await storage.write(key: 'tokenDateExpired', value: tokenDateExpired);
+  }
+
 }

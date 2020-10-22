@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:provider_flutter_application/animation/LoadingCubeGridAnimation.dart';
 import 'package:provider_flutter_application/animation/FadeAnimation.dart';
+import 'package:provider_flutter_application/provider/home_provider.dart';
 import 'package:provider_flutter_application/provider/login_provider.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -18,9 +18,6 @@ class LoginScreen extends StatelessWidget {
 }
 
 class _LoginScreen extends StatelessWidget {
-
-  // final TextEditingController _ctrlUsername = TextEditingController();
-  // final TextEditingController _ctrlPassword = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -181,10 +178,9 @@ class _LoginScreen extends StatelessWidget {
                         onTap: () async {
                           if (!(states.ctrlUsername.text == '' &&
                               states.ctrlPassword.text == '')) {
-                            states.doLogin(
-                                username: states.ctrlUsername.text.trim(),
-                                password: states.ctrlPassword.text.trim());
-                            //if (loginSuccess) Get.toNamed('home');
+                            context.read<HomeProvider>().initState();
+                            states.doLogin();
+
                           }
                         },
                         child: Container(

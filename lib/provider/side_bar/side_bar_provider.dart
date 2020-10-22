@@ -47,7 +47,7 @@ class SideBarProvider with ChangeNotifier{
   void openSideBar() {
     log('openSideBar', name: 'SideBar');
     _sideBarActive = true;
-    _sideBarRadius = BorderRadius.all(Radius.circular(40));
+    _sideBarRadius = BorderRadius.all(Radius.circular(30));
     notifyListeners();
   }
 
