@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_flutter_application/animation/LoadingCubeGridAnimation.dart';
 import 'package:provider_flutter_application/model/article.dart';
-
 import 'package:provider_flutter_application/global.dart';
 import 'package:provider_flutter_application/provider/article_provider.dart';
 import 'package:intl/intl.dart';
@@ -24,73 +23,9 @@ class ArticleScreen extends StatelessWidget {
 }
 
 class _ArticleScreen extends StatelessWidget {
-  // List<Article> articleListView = new List<Article>();
-  // int countItemListArticle = 10;
-  // int lenArticleList;
-  // bool loading = true;
-
-  //refresh when pull screen
-  // RefreshController _refreshController =
-  //     RefreshController(initialRefresh: false);
-
-  // void _onRefresh() async {
-  //   // monitor network fetch
-  //   // await Future.delayed(Duration(milliseconds: 1000));
-  //   // if failed,use refreshFailed()
-  //   countItemListArticle = 10;
-  //   log("refresh! count = " + countItemListArticle.toString());
-  //
-  //   // await _getAllArticle();
-  //
-  //   state.refreshController.refreshCompleted();
-  // }
-
-  // void _onLoading() async {
-  //   // monitor network fetch
-  //   await Future.delayed(Duration(milliseconds: 1000));
-  //   // if failed,use loadFailed(),if no data return,use LoadNodata()
-  //   if (countItemListArticle < lenArticleList) {
-  //     // get 2 list when refresh
-  //     if (countItemListArticle + 2 <= lenArticleList) {
-  //       countItemListArticle += 2;
-  //     } else if (countItemListArticle + 1 <= lenArticleList) {
-  //       countItemListArticle += 1;
-  //     }
-  //     log("countItemArticle: " + countItemListArticle.toString());
-  //     log("len: " + lenArticleList.toString());
-  //
-  //     articleListView.add((articleListView[countItemListArticle]));
-  //     state.refreshController.loadComplete();
-  //   } else {
-  //     log("no data");
-  //     state.refreshController.loadNoData();
-  //   }
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   countItemListArticle = 10;
-  //
-  //   _getAllArticle();
-  // }
-
-  // _getAllArticle() async {
-  //   ArticleApi articleApi = new ArticleApi();
-  //   List<Article> article = await articleApi.getAllArticle();
-  //   log("getAll Article");
-  //   // setState(() {
-  //   //   articleListView = article;
-  //   //   lenArticleList = article.length;
-  //   //   loading = false;
-  //   // });
-  // }
-
   @override
   Widget build(BuildContext context) {
     log('Build at ' + DateTime.now().toString(),name: '[Article Screen]');
-    //final state = context.watch<ArticleProvider>();
-
     return Scaffold(
       body: Container(
         child: Stack(
@@ -177,17 +112,7 @@ class _ArticleScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return InkWell(
                           onTap: () {
-                            print(states.articleListView[index].topic);
                             Get.toNamed('articleDetails',arguments: states.articleListView[index]);
-
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => ArticleDetailsPage(
-                            //       article: states.articleListView[index],
-                            //     ),
-                            //   ),
-                            // );
                           },
                           child: ArticleTile(
                             //Send List to Tile
@@ -205,10 +130,6 @@ class _ArticleScreen extends StatelessWidget {
       ),
     );
   }
-
-
-
-
 }
 
 class ArticleTile extends StatelessWidget {
@@ -254,7 +175,6 @@ class ArticleTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   AutoSizeText(
-
                     '$topic',
                     maxLines: 2,
                     style: TextStyle(
@@ -309,7 +229,6 @@ class ArticleTile extends StatelessWidget {
   String dateStrToDateTime(String strDateTime) {
     DateTime oldFormat =
         new DateFormat("MMM dd, yyyy hh:mm:ss a").parse(strDateTime);
-
     String newFormat = DateFormat("d MMM yyyy HH:mm").format(oldFormat);
 
     return newFormat;

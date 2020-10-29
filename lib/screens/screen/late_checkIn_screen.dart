@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
-
-// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_flutter_application/action/holiday_action.dart';
 import 'package:provider_flutter_application/animation/LoadingRippleAnimation.dart';
 import 'package:provider_flutter_application/provider/home_provider.dart';
 import 'package:provider_flutter_application/provider/late_checkin_provider.dart';
@@ -28,36 +28,6 @@ class LateCheckInScreen extends StatelessWidget {
 }
 
 class _LateCheckInScreen extends StatelessWidget {
-  // String _date = "Not set";
-  // String _time = "Not set";
-  // DateTime _firstDateSelect = DateTime(
-  //   DateTime.now().year,
-  //   1,
-  //   1,
-  // );
-  // DateTime _lastDateSelect = DateTime(DateTime.now().year, DateTime.now().month,
-  //     DateTime.now().day, 23, 59, 59);
-  // DateTime _initialDate = DateTime.now();
-
-  // @override
-  // void initState() {
-  //   _time = DateFormat("HH:mm").format(DateTime.now());
-  //   _date = DateFormat("d MMM yyyy").format(DateTime.now());
-  //   super.initState();
-  // }
-
-  //TimeOfDay timeSelect = TimeOfDay.now();
-
-  // void onTimeChanged(TimeOfDay newTime) {
-  //   setState(() {
-  //     timeSelect = newTime;
-  //     final now = new DateTime.now();
-  //     DateTime time =
-  //         DateTime(now.year, now.month, now.day, newTime.hour, newTime.minute);
-  //     _time = DateFormat("HH:mm").format(time);
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     log('Build at ' + DateTime.now().toString(), name: '[LateCheckIn screen]');
@@ -83,7 +53,7 @@ class _LateCheckInScreen extends StatelessWidget {
                       Row(
                         children: [
                           Image.asset(
-                            "assets/images/clock_black.png",
+                            'assets/images/clock_black.png',
                             height: 22,
                           ),
                           SizedBox(
@@ -91,7 +61,7 @@ class _LateCheckInScreen extends StatelessWidget {
                           ),
                           Center(
                             child: Text(
-                              "Late Check In",
+                              'Late Check In',
                               style: TextStyle(
                                   fontSize: 21,
                                   fontWeight: FontWeight.w800,
@@ -111,13 +81,13 @@ class _LateCheckInScreen extends StatelessWidget {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
+                                        CrossAxisAlignment.stretch,
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        MainAxisAlignment.start,
                                         children: [
                                           Container(
                                             child: AutoSizeText(
-                                              "Date",
+                                              'Date',
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w500,
@@ -135,8 +105,8 @@ class _LateCheckInScreen extends StatelessWidget {
                                                 },
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          18.0),
+                                                  BorderRadius.circular(
+                                                      18.0),
                                                 ),
                                                 color: Color(0xff29404E),
                                                 /*Color.fromRGBO(15, 129, 68, 1),*/
@@ -146,7 +116,7 @@ class _LateCheckInScreen extends StatelessWidget {
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:
-                                                          FontWeight.w500,
+                                                      FontWeight.w500,
                                                       fontSize: 30,
                                                     ),
                                                   ),
@@ -162,7 +132,7 @@ class _LateCheckInScreen extends StatelessWidget {
                                     ),
                                     Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Align(
                                           alignment: Alignment.centerLeft,
@@ -187,7 +157,7 @@ class _LateCheckInScreen extends StatelessWidget {
                                                   value: states.defaultTime,
                                                   is24HrFormat: true,
                                                   onChange:
-                                                      states.onTimeChanged,
+                                                  states.onTimeChanged,
                                                   // onChangeDateTime: (DateTime dateTime) {
                                                   //   print(dateTime);
                                                   // },
@@ -196,7 +166,7 @@ class _LateCheckInScreen extends StatelessWidget {
                                             },
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(18.0),
+                                              BorderRadius.circular(18.0),
                                             ),
                                             color: Color(0xff29404E),
                                             /*Color.fromRGBO(15, 76, 129, 1),*/
@@ -221,7 +191,7 @@ class _LateCheckInScreen extends StatelessWidget {
                                   alignment: Alignment.centerLeft,
                                   child: Container(
                                     child: Text(
-                                      "Description",
+                                      'Description',
                                       style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           fontSize: 20),
@@ -260,7 +230,7 @@ class _LateCheckInScreen extends StatelessWidget {
                                       ),
                                       hintText: 'ex. I thought checked in.',
                                       hintStyle:
-                                          TextStyle(color: Colors.grey[400]),
+                                      TextStyle(color: Colors.grey[400]),
                                     ),
                                   ),
                                 ),
@@ -275,20 +245,20 @@ class _LateCheckInScreen extends StatelessWidget {
                                             if (states.description.length >=
                                                 10) {
                                               return alertCheck(context,
-                                                      'Late Check-In', states)
+                                                  'Late Check-In', states)
                                                   .show();
                                             } else {
                                               showSimpleNotification(
                                                   Text(
-                                                      "Please fill the description with more than 10 characters!"),
+                                                      'Please fill the description with more than 10 characters!'),
                                                   duration:
-                                                      Duration(seconds: 1),
+                                                  Duration(seconds: 1),
                                                   background: Colors.red);
                                             }
                                           },
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(12.0),
+                                            BorderRadius.circular(12.0),
                                           ),
                                           color: Colors.green[800],
                                           /*Color.fromRGBO(15, 76, 129, 1),*/
@@ -314,20 +284,20 @@ class _LateCheckInScreen extends StatelessWidget {
                                             if (states.description.length >=
                                                 10) {
                                               return alertCheck(context,
-                                                      'Late Check-Out', states)
+                                                  'Late Check-Out', states)
                                                   .show();
                                             } else {
                                               showSimpleNotification(
                                                   Text(
-                                                      "Please fill the description with more than 10 characters!"),
+                                                      'Please fill the description with more than 10 characters!'),
                                                   duration:
-                                                      Duration(seconds: 1),
+                                                  Duration(seconds: 1),
                                                   background: Colors.red);
                                             }
                                           },
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(12.0),
+                                            BorderRadius.circular(12.0),
                                           ),
                                           color: Colors.blue[800],
                                           /*Color.fromRGBO(15, 76, 129, 1),*/
@@ -362,46 +332,113 @@ class _LateCheckInScreen extends StatelessWidget {
     );
   }
 
-  _showDatePicker(BuildContext context, LateCheckInProvider states) {
+  _showDatePicker(BuildContext context, LateCheckInProvider states) async {
+    HolidayAction holidayAction = new HolidayAction();
+    List<DateTime> holidayList = await holidayAction.getAllDateHoliday();
+
+
+    List<DateTime> disabledDate = new List<DateTime>();
+    int virtualDays = 12;
+    DateTime virtualCurrentDate = DateTime(DateTime.now().year, DateTime.now().month, virtualDays, DateTime.now().hour, DateTime.now().minute, DateTime.now().second);
+    log('1 virtualCurrentDate : {$virtualCurrentDate}');
+    DateTime firstDateSelectable = virtualCurrentDate;
+
+    log('1 firstDateSelectable : {$firstDateSelectable}');
+    int virtualHours = virtualCurrentDate.hour;
+    int virtualMinutes = virtualCurrentDate.minute;
+    int virtualSeconds = virtualCurrentDate.second;
+    // String weekday =  DateFormat('EEEE').format(virtualCurrentDate);
+
+
+    /* condition */
+    log('[Weekdays]: ${virtualCurrentDate.weekday}');
+    if(virtualCurrentDate.weekday >= 2 && virtualCurrentDate.weekday <= 5) { //tuesday-friday
+      //can late checkin-out 1 day before
+      firstDateSelectable = virtualCurrentDate.subtract(Duration(days: 2));
+      log('sdfsdf $firstDateSelectable');
+    }else if(virtualCurrentDate.weekday == 1){ //monday
+        //can late checkin-out 1 day before include Friday and Sunday
+        firstDateSelectable = virtualCurrentDate.subtract(Duration(days:4));
+        disabledDate.add(virtualCurrentDate.subtract(Duration(days:2)));
+
+    }else if(virtualCurrentDate.weekday == 6){ //saturday
+      firstDateSelectable = virtualCurrentDate.subtract(Duration(days:2));
+      disabledDate.add(virtualCurrentDate.subtract(Duration(days:3)));
+    }
+    else if(virtualCurrentDate.weekday == 7){ //sunday
+      firstDateSelectable = virtualCurrentDate.subtract(Duration(days:3));
+    }
+
+    // add current hour minute second
+    for(int i = 0; i< holidayList.length; i++){
+      holidayList[i] = DateTime(holidayList[i].year, holidayList[i].month, holidayList[i].day,virtualHours,virtualMinutes,virtualSeconds);
+      //log('subtract: ${holidayList[i]}');
+    }
+
+
+    //TODO: Holiday
+    /* check Holiday */
+    for(int i = holidayList.length-1; i >= 0; i--){
+        log('round $i : ${holidayList[i].toString()}',name:'holidayList');
+        log('round $i : ${firstDateSelectable.toString()}',name:'holidayList');
+        disabledDate.add(holidayList[i]);
+    /* case holiday same day's can check-in-out then [firstDateSelectable add duration +1] */
+      if(holidayList[i].subtract(Duration(days:1)) == firstDateSelectable){
+
+        log('same Holiday: {${holidayList[i]}}, firstDateSelectable : {$firstDateSelectable}');
+        firstDateSelectable = firstDateSelectable.subtract(Duration(days:1));
+      }
+    }
+
+
+    log('firstDateSelectable: {$firstDateSelectable}');
+    log('virtualCurrentDate: {$virtualCurrentDate}');
+
     return showRoundedDatePicker(
       context: context,
+      initialDate: virtualCurrentDate,
+      firstDate: firstDateSelectable,
+      lastDate: virtualCurrentDate,
+      listDateDisabled: disabledDate,
       barrierDismissible: true,
-      height: MediaQuery.of(context).size.height * 0.3,
+        customWeekDays: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+      height: MediaQuery.of(context).size.height * 0.45,
       theme: ThemeData(
         primaryColor: Color.fromRGBO(15, 129, 68, 1),
         accentColor: Color.fromRGBO(15, 129, 68, 1),
       ),
+      // listDateDisabled: holidayList,
       onTapDay: (DateTime dateTime, bool available) {
-        print("return $available");
+        print('return $available');
         if (available == true) {
           states.onDateChanged(dateTime);
           Get.back();
+        }else if (available == false){
+          showSimpleNotification(Text("You can't choose this day"),
+              duration: Duration(seconds: 2), background: Colors.red);
         }
         return available;
       },
       textPositiveButton: 'CANCEL',
       textNegativeButton: '',
-      initialDate: states.defaultDate,
-      firstDate: states.firstDateSelectable,
-      lastDate: states.lastDateSelectable,
       borderRadius: 16,
     );
   }
 
-  Alert alertCheck(
-      BuildContext context, String typeCheck, LateCheckInProvider states) {
+  Alert alertCheck(BuildContext context, String typeCheck,
+      LateCheckInProvider states) {
     log('[lat]: ${states.latitude}');
     log('[long]: ${states.longitude}');
     String checkInType;
-    if (typeCheck == "Late Check-In") {
+    if (typeCheck == 'Late Check-In') {
       //case Late CheckIn
-      checkInType = "1";
-    } else if (typeCheck == "Late Check-Out") {
+      checkInType = '1';
+    } else if (typeCheck == 'Late Check-Out') {
       //case Late CheckOut
-      checkInType = "2";
+      checkInType = '2';
     } else {
       //Error something
-      checkInType = "0";
+      checkInType = '0';
     }
 
     return Alert(
@@ -416,28 +453,29 @@ class _LateCheckInScreen extends StatelessWidget {
         ),
       ),
       content: Consumer<HomeProvider>(
-        builder: (BuildContext context, states, Widget child) => Container(
-          height: 200,
-          child: ((states.latitude == null) && (states.longitude == null))
-              ? new LoadingRipple()
-              : GoogleMap(
-                  mapType: MapType.normal,
-                  myLocationEnabled: true,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(states.latitude ?? 0, states.longitude ?? 0),
-                    zoom: 20,
-                  ),
-                  onMapCreated: (GoogleMapController controller) {
-                    states.mapController.complete(controller);
-                  },
+        builder: (BuildContext context, states, Widget child) =>
+            Container(
+              height: 200,
+              child: ((states.latitude == null) && (states.longitude == null))
+                  ? new LoadingRipple()
+                  : GoogleMap(
+                mapType: MapType.normal,
+                myLocationEnabled: true,
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(states.latitude ?? 0, states.longitude ?? 0),
+                  zoom: 20,
                 ),
-        ),
+                onMapCreated: (GoogleMapController controller) {
+                  states.mapController.complete(controller);
+                },
+              ),
+            ),
       ),
       title: '$typeCheck',
       buttons: [
         DialogButton(
           child: Text(
-            "Cancel",
+            'Cancel',
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -446,12 +484,12 @@ class _LateCheckInScreen extends StatelessWidget {
           color: Colors.grey,
           onPressed: () {
             Get.back();
-            log("cancel");
+            log('cancel');
           },
         ),
         DialogButton(
           child: Text(
-            "Yes",
+            'Yes',
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -461,155 +499,9 @@ class _LateCheckInScreen extends StatelessWidget {
           onPressed: () async {
             log('$typeCheck : yes');
             states.confirmLateCheckIn(context, checkInType);
-
-            //Navigator.of(context, rootNavigator: true).pop();
           },
         ),
       ],
     );
   }
-
-// Alert alertWarning(BuildContext context) {
-//   return Alert(
-//     context: context,
-//     style: AlertStyle(
-//       animationType: AnimationType.fromTop,
-//       alertBorder: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.circular(10.0),
-//         side: BorderSide(
-//           color: Colors.grey,
-//         ),
-//       ),
-//     ),
-//     desc: 'Please fill the Description more than 10 character.',
-//     title: 'Warning!',
-//     type: AlertType.error,
-//     // content: ,
-//     buttons: [
-//       DialogButton(
-//         child: Text(
-//           "close",
-//           style: TextStyle(
-//             color: Colors.white,
-//             fontSize: 18,
-//           ),
-//         ),
-//         color: Colors.green,
-//         onPressed: () async {
-//           Navigator.of(context, rootNavigator: true).pop();
-//         },
-//       ),
-//     ],
-//   );
-// }
-
-// Alert alertSuccess(BuildContext context) {
-//   return Alert(
-//     context: context,
-//     style: AlertStyle(
-//       animationType: AnimationType.grow,
-//       alertBorder: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.circular(10.0),
-//         side: BorderSide(
-//           color: Colors.grey,
-//         ),
-//       ),
-//     ),
-//     desc: '',
-//     title: 'Success!',
-//     type: AlertType.success,
-//     // content: ,
-//     buttons: [
-//       DialogButton(
-//         child: Text(
-//           "close",
-//           style: TextStyle(
-//             color: Colors.white,
-//             fontSize: 18,
-//           ),
-//         ),
-//         color: Colors.green,
-//         onPressed: () async {
-//           Navigator.of(context, rootNavigator: true).pop();
-//         },
-//       ),
-//     ],
-//   );
-// }
-
 }
-
-// class CustomPicker extends CommonPickerModel {
-//   String digits(int value, int length) {
-//     return '$value'.padLeft(length, "0");
-//   }
-//
-//   CustomPicker({DateTime currentTime, LocaleType locale})
-//       : super(locale: locale) {
-//     this.currentTime = currentTime ?? DateTime.now();
-//     this.setLeftIndex(this.currentTime.hour);
-//     this.setMiddleIndex(this.currentTime.minute);
-//     this.setRightIndex(this.currentTime.second);
-//   }
-//
-//   @override
-//   String leftStringAtIndex(int index) {
-//     if (index >= 0 && index < 24) {
-//       return this.digits(index, 2);
-//     } else {
-//       return null;
-//     }
-//   }
-//
-//   @override
-//   String middleStringAtIndex(int index) {
-//     if (index >= 0 && index < 60) {
-//       return this.digits(index, 2);
-//     } else {
-//       return null;
-//     }
-//   }
-//
-//   @override
-//   String rightStringAtIndex(int index) {
-//     if (index >= 0 && index < 60) {
-//       return this.digits(index, 2);
-//     } else {
-//       return null;
-//     }
-//   }
-//
-//   @override
-//   String leftDivider() {
-//     return "";
-//   }
-//
-//   @override
-//   String rightDivider() {
-//     return ":";
-//   }
-//
-//   @override
-//   List<int> layoutProportions() {
-//     return [1, 1, 0];
-//   }
-//
-//   @override
-//   DateTime finalTime() {
-//     return currentTime.isUtc
-//         ? DateTime.utc(
-//             currentTime.year,
-//             currentTime.month,
-//             currentTime.day,
-//             this.currentLeftIndex(),
-//             this.currentMiddleIndex(),
-//             this.currentRightIndex())
-//         : DateTime(
-//             currentTime.year,
-//             currentTime.month,
-//             currentTime.day,
-//             this.currentLeftIndex(),
-//             this.currentMiddleIndex(),
-//             this.currentRightIndex());
-//   }
-// }

@@ -28,13 +28,12 @@ dependencies:
     sdk: flutter
   simple_animations: ^2.2.3
   http: ^0.12.2
-  connectivity: ^0.4.9+5
   shared_preferences: ^0.5.10
   font_awesome_flutter: ^8.10.0
   intl: ^0.16.1
   dio: ^3.0.10
   retrofit: any
-  logger: any
+  logger: ^0.9.4
   json_annotation: any
   flutter_html: ^1.0.2
   rflutter_alert: ^1.1.0
@@ -58,6 +57,10 @@ dependencies:
   auto_size_text_field: ^0.1.5
   uuid: ^2.2.2
   get: ^3.13.2
+  keyboard_avoider: ^0.1.2
+  file_picker: ^2.0.11
+  connectivity: ^2.0.0
+
 
   flutter_launcher_icons: ^0.8.1
   cupertino_icons: ^1.0.0

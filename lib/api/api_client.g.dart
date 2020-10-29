@@ -9,7 +9,7 @@ part of 'api_client.dart';
 class _ApiClient implements ApiClient {
   _ApiClient(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    this.baseUrl ??= 'http://192.168.0.110:8080';
+    baseUrl ??= 'http://192.168.0.111:8080';
   }
 
   final Dio _dio;
@@ -17,11 +17,11 @@ class _ApiClient implements ApiClient {
   String baseUrl;
 
   @override
-  getAllUser() async {
+  Future<List<User>> getAllUser() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final Response<List<dynamic>> _result = await _dio.request('/ms-user-list',
+    final _result = await _dio.request<List<dynamic>>('/ms-user-list',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'GET',
@@ -36,14 +36,14 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  getUserByLogin(user) async {
+  Future<User> getUserByLogin(user) async {
     ArgumentError.checkNotNull(user, 'user');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(user?.toJson() ?? <String, dynamic>{});
-    final Response<Map<String, dynamic>> _result = await _dio.request(
-        '/ms-user-login',
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.request<Map<String, dynamic>>('/ms-user-login',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'POST',
@@ -57,12 +57,11 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  getAllArticle() async {
+  Future<List<Article>> getAllArticle() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final Response<List<dynamic>> _result = await _dio.request(
-        '/ms-article-list',
+    final _result = await _dio.request<List<dynamic>>('/ms-article-list',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'GET',
@@ -77,14 +76,14 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  getWorkHoursById(user) async {
+  Future<List<WorkHours>> getWorkHoursById(user) async {
     ArgumentError.checkNotNull(user, 'user');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(user?.toJson() ?? <String, dynamic>{});
-    final Response<List<dynamic>> _result = await _dio.request(
-        '/ms-workhours-by-id',
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.request<List<dynamic>>('/ms-workhours-by-id',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'POST',
@@ -100,13 +99,14 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  getTodayCheckInById(user) async {
+  Future<List<WorkHours>> getTodayCheckInById(user) async {
     ArgumentError.checkNotNull(user, 'user');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(user?.toJson() ?? <String, dynamic>{});
-    final Response<List<dynamic>> _result = await _dio.request(
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.request<List<dynamic>>(
         '/ms-workhours-checkIn-today',
         queryParameters: queryParameters,
         options: RequestOptions(
@@ -123,13 +123,14 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  getTodayCheckOutById(user) async {
+  Future<List<WorkHours>> getTodayCheckOutById(user) async {
     ArgumentError.checkNotNull(user, 'user');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(user?.toJson() ?? <String, dynamic>{});
-    final Response<List<dynamic>> _result = await _dio.request(
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.request<List<dynamic>>(
         '/ms-workhours-checkOut-today',
         queryParameters: queryParameters,
         options: RequestOptions(
@@ -146,13 +147,14 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  checkInAndOut(workHours) async {
+  Future<String> checkInAndOut(workHours) async {
     ArgumentError.checkNotNull(workHours, 'workHours');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(workHours?.toJson() ?? <String, dynamic>{});
-    final Response<String> _result = await _dio.request('/ms-checkIn',
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.request<String>('/ms-checkIn',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'POST',
@@ -166,13 +168,14 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  lateCheckInAndOut(workHours) async {
+  Future<String> lateCheckInAndOut(workHours) async {
     ArgumentError.checkNotNull(workHours, 'workHours');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(workHours?.toJson() ?? <String, dynamic>{});
-    final Response<String> _result = await _dio.request('/ms-lateCheckIn',
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.request<String>('/ms-lateCheckIn',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'POST',
@@ -186,13 +189,14 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  getLastCheckInById(user) async {
+  Future<WorkHours> getLastCheckInById(user) async {
     ArgumentError.checkNotNull(user, 'user');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(user?.toJson() ?? <String, dynamic>{});
-    final Response<Map<String, dynamic>> _result = await _dio.request(
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.request<Map<String, dynamic>>(
         '/ms-workhours-last-checkIn',
         queryParameters: queryParameters,
         options: RequestOptions(
@@ -203,6 +207,97 @@ class _ApiClient implements ApiClient {
             baseUrl: baseUrl),
         data: _data);
     final value = WorkHours.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<List<Holiday>> getAllHoliday() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<List<dynamic>>('/ms-holiday-list',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    var value = _result.data
+        .map((dynamic i) => Holiday.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<List<Ticket>> getAllTicket() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<List<dynamic>>('/ms-ticket-list',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    var value = _result.data
+        .map((dynamic i) => Ticket.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<String> addTicket(ticket, fileUpload) async {
+    ArgumentError.checkNotNull(ticket, 'ticket');
+    ArgumentError.checkNotNull(fileUpload, 'fileUpload');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = FormData();
+    _data.fields
+        .add(MapEntry('ticket', jsonEncode(ticket ?? <String, dynamic>{})));
+    _data.files.add(MapEntry(
+        'fileUpload',
+        MultipartFile.fromFileSync(fileUpload.path,
+            filename: fileUpload.path.split(Platform.pathSeparator).last)));
+    final _result = await _dio.request<String>('/ms-add-ticket',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            contentType: 'application/x-www-form-urlencoded',
+            baseUrl: baseUrl),
+        data: _data);
+    final value = _result.data;
+    return value;
+  }
+
+  @override
+  Future<String> addFileUpload(fileUpload, fileName) async {
+    ArgumentError.checkNotNull(fileUpload, 'fileUpload');
+    ArgumentError.checkNotNull(fileName, 'fileName');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = FormData();
+    _data.files.add(MapEntry(
+        'fileUpload',
+        MultipartFile.fromFileSync(fileUpload.path,
+            filename: fileUpload.path.split(Platform.pathSeparator).last)));
+    if (fileName != null) {
+      _data.fields.add(MapEntry('fileName', fileName));
+    }
+    final _result = await _dio.request<String>('/ms-add-fileUpload',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            contentType: 'application/x-www-form-urlencoded',
+            baseUrl: baseUrl),
+        data: _data);
+    final value = _result.data;
     return value;
   }
 }

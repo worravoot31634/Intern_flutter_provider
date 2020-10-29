@@ -14,10 +14,12 @@ import 'package:provider_flutter_application/provider/login_provider.dart';
 import 'package:provider_flutter_application/provider/side_bar/header_app_provider.dart';
 import 'package:provider_flutter_application/provider/side_bar/side_bar_provider.dart';
 import 'package:provider_flutter_application/screens/screen/login_screen.dart';
+import 'package:provider_flutter_application/screens/screenWithSidebar/add_ticket_with_sidebar.dart';
 import 'package:provider_flutter_application/screens/screenWithSidebar/article_details_with_sidebar.dart';
 import 'package:provider_flutter_application/screens/screenWithSidebar/article_with_sidebar.dart';
 import 'package:provider_flutter_application/screens/screenWithSidebar/home_with_sidebar.dart';
 import 'package:provider_flutter_application/screens/screenWithSidebar/late_checkIn_with_sidebar.dart';
+import 'package:provider_flutter_application/screens/screenWithSidebar/ticket_with_sidebar.dart';
 
 void main() {
   HttpOverrides.global = new MyHttpOverrides();
@@ -51,6 +53,8 @@ class MyApp extends StatelessWidget {
             GetPage(name: '/article', page: () => ArticleWithSidebar(),transition: Transition.cupertino),
             GetPage(name: '/articleDetails', page: () => ArticleDetailsWithSidebar(),transition: Transition.cupertino),
             GetPage(name: '/lateCheckIn', page: () => LateCheckInWithSidebar(),transition: Transition.cupertino),
+            GetPage(name: '/ticket', page: () => TicketWithSidebar(),transition: Transition.cupertino),
+            GetPage(name: '/addTicket', page: () => AddTicketWithSidebar(),transition: Transition.cupertino),
           ],
           builder: (context, child) {
             return ScrollConfiguration(

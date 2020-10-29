@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider_flutter_application/shared_preferences/SharedPref.dart';
 

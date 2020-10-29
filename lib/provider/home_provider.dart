@@ -12,7 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:provider_flutter_application/action/implement/user_action.dart';
+import 'file:///C:/Users/User/IdeaProjects/flutter_application_provider/lib/action/user_action.dart';
 import 'package:provider_flutter_application/api/user_api/work_hours_api.dart';
 import 'package:provider_flutter_application/model/work_hours.dart';
 import 'package:provider_flutter_application/shared_preferences/SharedPref.dart';
@@ -162,7 +162,7 @@ class HomeProvider with ChangeNotifier {
     } else {
       _btnStatus = 'exception';
     }
-    log('change btnStatus finished');
+    log('updated button status');
     notifyListeners();
   }
 
@@ -196,6 +196,37 @@ class HomeProvider with ChangeNotifier {
     _statusCheckIn = await userAction.getStatusCheckInToDay(await pref.getId());
     notifyListeners();
   }
+
+  void changeScreen (String screenName){
+    switch (screenName) {
+      case "Late\nCheck In":
+        {
+          print('Late Check In click');
+          Get.toNamed('lateCheckIn');
+        }
+        break;
+
+      case "Article\n":
+        {
+          log('open article screen');
+          Get.toNamed('article');
+        }
+        break;
+      case "Ticket\n":
+        {
+          log('open ticket screen');
+          Get.toNamed('ticket');
+        }
+        break;
+      default:
+        {
+          print('default');
+        }
+        break;
+    }
+    notifyListeners();
+  }
+
 
   String getCurrentTime() {
     return _formatTime(DateTime.now());

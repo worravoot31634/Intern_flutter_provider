@@ -138,6 +138,7 @@ class _LoginScreen extends StatelessWidget {
                                 ),
                               ),
                               child: TextField(
+                                autofocus: true,
                                 textInputAction: TextInputAction.next,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,

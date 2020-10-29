@@ -33,6 +33,7 @@ class LateCheckInProvider with ChangeNotifier{
   DateTime _lastDateSelectable = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 23, 59, 59);
   DateTime _defaultDate = DateTime.now();
   TimeOfDay _defaultTime = TimeOfDay.now();
+  List<DateTime> _listDateDisabled;
 
   TextEditingController _ctrlDescription = TextEditingController();
   Color _textFieldDesColor = Color(0xff29404E);
@@ -45,13 +46,15 @@ class LateCheckInProvider with ChangeNotifier{
 
   initState() {
 
-    _firstDateSelectable = DateTime(DateTime.now().year, 1, 1,);
+    //_firstDateSelectable = DateTime(DateTime.now().year, 1, 1,);
+    _firstDateSelectable = DateTime.now().subtract(Duration(days: 20));
     _lastDateSelectable = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 23, 59, 59);
     _defaultDate = DateTime.now();
     _defaultTime = TimeOfDay.now();
     _time = DateFormat("HH:mm").format(DateTime.now());
     _date = DateFormat("d MMM yyyy").format(DateTime.now());
     notifyListeners();
+    //checkListDateDisabled(); //for disable date cant checkin-out
     initCheckData(); //for checkin-out
   }
 
@@ -65,6 +68,12 @@ class LateCheckInProvider with ChangeNotifier{
     _longitude = locationData.longitude;
     log('initCheckData finished');
 
+  }
+
+  void checkListDateDisabled(){
+    if(_listDateDisabled != null) _listDateDisabled.clear();
+    _listDateDisabled.add(DateTime.now().subtract(Duration(days: 2)));
+    notifyListeners();
   }
 
   void confirmLateCheckIn (BuildContext context, String checkInType) async{
@@ -173,4 +182,6 @@ class LateCheckInProvider with ChangeNotifier{
   Color get textFieldDesColor => _textFieldDesColor;
 
   String get labelTextDes => _labelTextDes;
+
+  List<DateTime> get listDateDisabled => _listDateDisabled;
 }

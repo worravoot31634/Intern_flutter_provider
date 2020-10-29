@@ -1,8 +1,15 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:provider_flutter_application/model/article.dart';
+import 'package:provider_flutter_application/model/holiday.dart';
+import 'package:provider_flutter_application/model/ticket.dart';
 import 'package:provider_flutter_application/model/user.dart';
 import 'package:provider_flutter_application/model/work_hours.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:dio/dio.dart';
+
 
 import 'package:provider_flutter_application/global.dart';
 
@@ -25,6 +32,7 @@ abstract class ApiClient {
   /* Article */
   @GET("/ms-article-list")
   Future<List<Article>> getAllArticle();
+
   /* End of Article */
 
   /* WorkHours */
@@ -51,6 +59,28 @@ abstract class ApiClient {
   @POST("/ms-workhours-last-checkIn")
   @FormUrlEncoded()
   Future<WorkHours> getLastCheckInById(@Body() User user);
+
   /* End of WorkHours */
 
+/* Holiday */
+  @POST("/ms-holiday-list")
+  Future<List<Holiday>> getAllHoliday();
+
+/* End of Holiday */
+
+/* Ticket */
+  @POST("/ms-ticket-list")
+  Future<List<Ticket>> getAllTicket();
+
+  @POST("/ms-add-ticket")
+  @FormUrlEncoded()
+  Future<String> addTicket(@Part()  Ticket ticket, @Part() File fileUpload);
+
+/* End of Ticket */
+
+/* File Upload */
+  @POST("/ms-add-fileUpload")
+  @FormUrlEncoded()
+  Future<String> addFileUpload(@Part() File fileUpload, @Part() String fileName);
+/* End of File Upload */
 }

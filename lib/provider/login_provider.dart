@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:provider_flutter_application/action/implement/user_action.dart';
+import 'file:///C:/Users/User/IdeaProjects/flutter_application_provider/lib/action/user_action.dart';
 import 'package:provider_flutter_application/shared_preferences/SharedPref.dart';
 import 'package:uuid/uuid.dart';
 
