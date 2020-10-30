@@ -9,7 +9,7 @@ part of 'api_client.dart';
 class _ApiClient implements ApiClient {
   _ApiClient(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'http://192.168.0.111:8080';
+    baseUrl ??= 'http://192.168.0.110:8080';
   }
 
   final Dio _dio;
@@ -249,9 +249,10 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<String> addTicket(ticket, fileUpload) async {
+  Future<String> addTicket(ticket, fileUpload, fileName) async {
     ArgumentError.checkNotNull(ticket, 'ticket');
     ArgumentError.checkNotNull(fileUpload, 'fileUpload');
+    ArgumentError.checkNotNull(fileName, 'fileName');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = FormData();
@@ -261,6 +262,9 @@ class _ApiClient implements ApiClient {
         'fileUpload',
         MultipartFile.fromFileSync(fileUpload.path,
             filename: fileUpload.path.split(Platform.pathSeparator).last)));
+    if (fileName != null) {
+      _data.fields.add(MapEntry('fileName', fileName));
+    }
     final _result = await _dio.request<String>('/ms-add-ticket',
         queryParameters: queryParameters,
         options: RequestOptions(
@@ -275,20 +279,14 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<String> addFileUpload(fileUpload, fileName) async {
-    ArgumentError.checkNotNull(fileUpload, 'fileUpload');
-    ArgumentError.checkNotNull(fileName, 'fileName');
+  Future<String> addTicketWithoutFile(ticket) async {
+    ArgumentError.checkNotNull(ticket, 'ticket');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = FormData();
-    _data.files.add(MapEntry(
-        'fileUpload',
-        MultipartFile.fromFileSync(fileUpload.path,
-            filename: fileUpload.path.split(Platform.pathSeparator).last)));
-    if (fileName != null) {
-      _data.fields.add(MapEntry('fileName', fileName));
-    }
-    final _result = await _dio.request<String>('/ms-add-fileUpload',
+    _data.fields
+        .add(MapEntry('ticket', jsonEncode(ticket ?? <String, dynamic>{})));
+    final _result = await _dio.request<String>('/ms-add-ticket',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'POST',

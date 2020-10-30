@@ -5,9 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:provider_flutter_application/api/user_api/ticket_api.dart';
+import 'package:provider/provider.dart';
+import 'package:provider_flutter_application/animation/LoadingCubeGridAnimation.dart';
 import 'package:provider_flutter_application/model/ticket.dart';
+import 'package:provider_flutter_application/provider/ticket_provider.dart';
 import 'package:provider_flutter_application/screens/widgets/header_app.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class TicketScreen extends StatelessWidget {
   @override
@@ -68,14 +71,15 @@ class _TicketScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         RaisedButton.icon(
-                          onPressed: () async{
+                          onPressed: () async {
                             Get.toNamed('addTicket');
-                            TicketApi ticketApi = new TicketApi();
-                            List<Ticket> ticketList = await ticketApi.getAllTicket();
-                            },
+                          },
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                          label: AutoSizeText('Add', style: TextStyle(color: Colors.white),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          label: AutoSizeText(
+                            'Add',
+                            style: TextStyle(color: Colors.white),
                           ),
                           icon: Icon(
                             Icons.add_box,
@@ -90,8 +94,195 @@ class _TicketScreen extends StatelessWidget {
                 ],
               ),
             ),
+            Consumer<TicketProvider>(
+              builder: (BuildContext context, states, Widget child) =>
+                  Container(
+                padding: EdgeInsets.only(
+                  top: 180.0,
+                  left: 30.0,
+                  right: 30.0,
+                ),
+                child: states.ticketScreenLoading
+                    ? LoadingCubeGrid()
+                    : SmartRefresher(
+                        enablePullDown: true,
+                        enablePullUp: true,
+                        header: ClassicHeader(),
+                        footer: CustomFooter(
+                          builder: (BuildContext context, LoadStatus mode) {
+                            Widget body;
+                            if (mode == LoadStatus.idle) {
+                              body = Text("pull up load");
+                            } else if (mode == LoadStatus.loading) {
+                              body = CupertinoActivityIndicator();
+                            } else if (mode == LoadStatus.failed) {
+                              body = Text("Load Failed!Click retry!");
+                            } else if (mode == LoadStatus.canLoading) {
+                              body = Text("more article");
+                            } else {
+                              body = Text("No more Data");
+                            }
+                            return Container(
+                              height: 55.0,
+                              child: Center(child: body),
+                            );
+                          },
+                        ),
+                        controller: states.refreshController,
+                        onRefresh: states.onRefresh,
+                        onLoading: states.onLoading,
+                        child: Container(
+                          child: ListView.builder(
+                            itemCount: states.ticketListView.length > 10
+                                ? states.countItemListTicket
+                                : states.ticketListView.length,
+                            shrinkWrap: true,
+                            physics: ScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  Get.toNamed('articleDetails',
+                                      arguments: states.ticketListView[index]);
+                                },
+                                child: TicketTile(
+                                  //Send List to Tile
+                                  ticketList: states.ticketListView[index],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+              ),
+            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class TicketTile extends StatelessWidget {
+  String ticketId;
+  String ticketName;
+  String timeCreate;
+  String ticketStatusName;
+  Ticket ticketList;
+  Color bgProcessColor;
+  Color textProcessColor;
+
+  /// later can be changed with imgUrl
+  TicketTile({this.ticketList});
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    //Initial Value
+    ticketId = ticketList.ticketId.toString();
+    ticketName = ticketList.ticketName;
+    timeCreate = ticketList.timeCreate;
+    ticketStatusName = ticketList.ticketStatusName;
+
+    if(ticketList.ticketStatusId == 1){
+      bgProcessColor = Colors.deepOrange[700];
+      textProcessColor = Colors.white;
+    }else if(ticketList.ticketStatusId == 2){
+      bgProcessColor = Colors.grey[700];
+      textProcessColor = Colors.white;
+    }else if(ticketList.ticketStatusId == 3){
+      bgProcessColor = Colors.green[700];
+      textProcessColor = Colors.white;
+    }
+    return Container(
+      height: 100,
+      margin: EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Color(0xff29404E),
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 5.0,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(left: 16),
+              width: MediaQuery.of(context).size.width - 100,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  AutoSizeText(
+                    '$ticketName',
+                    maxLines: 2,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: 'prompt',
+                        fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Image.asset(
+                        "assets/images/clock.png",
+                        height: 12,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      AutoSizeText(
+                        '${dateStrToDateTime(timeCreate)}',
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontFamily: 'prompt',
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 4,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(8),
+              bottomRight: Radius.circular(8),
+            ),
+            child: Container(
+              width: 130,
+              child: RaisedButton(
+                onPressed: () {},
+                color: bgProcessColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(8),
+                      bottomRight: Radius.circular(8)),
+                ),
+                child: Center(
+                    child: AutoSizeText(
+                  "$ticketStatusName",
+                  maxLines: 1,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: textProcessColor),
+                )),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

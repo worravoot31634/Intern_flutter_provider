@@ -74,13 +74,12 @@ abstract class ApiClient {
 
   @POST("/ms-add-ticket")
   @FormUrlEncoded()
-  Future<String> addTicket(@Part()  Ticket ticket, @Part() File fileUpload);
+  Future<String> addTicket(@Part()  Ticket ticket, @Part() File fileUpload, @Part() String fileName);
+
+  @POST("/ms-add-ticket")
+  @FormUrlEncoded()
+  Future<String> addTicketWithoutFile(@Part()  Ticket ticket);
 
 /* End of Ticket */
 
-/* File Upload */
-  @POST("/ms-add-fileUpload")
-  @FormUrlEncoded()
-  Future<String> addFileUpload(@Part() File fileUpload, @Part() String fileName);
-/* End of File Upload */
 }

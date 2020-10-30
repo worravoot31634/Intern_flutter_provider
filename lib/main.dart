@@ -7,12 +7,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_flutter_application/provider/add_ticket_provider.dart';
 import 'package:provider_flutter_application/provider/article_provider.dart';
 import 'package:provider_flutter_application/provider/home_provider.dart';
 import 'package:provider_flutter_application/provider/late_checkin_provider.dart';
 import 'package:provider_flutter_application/provider/login_provider.dart';
 import 'package:provider_flutter_application/provider/side_bar/header_app_provider.dart';
 import 'package:provider_flutter_application/provider/side_bar/side_bar_provider.dart';
+import 'package:provider_flutter_application/provider/ticket_provider.dart';
 import 'package:provider_flutter_application/screens/screen/login_screen.dart';
 import 'package:provider_flutter_application/screens/screenWithSidebar/add_ticket_with_sidebar.dart';
 import 'package:provider_flutter_application/screens/screenWithSidebar/article_details_with_sidebar.dart';
@@ -26,11 +28,13 @@ void main() {
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => HeaderAppProvider()),
+        ChangeNotifierProvider(create: (_) => SideBarProvider()),
         ChangeNotifierProvider(create: (_) => ArticleProvider()),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => LateCheckInProvider()),
-        ChangeNotifierProvider(create: (_) => SideBarProvider()),
+        ChangeNotifierProvider(create: (_) => AddTicketProvider()),
+        ChangeNotifierProvider(create: (_) => TicketProvider()),
       ],child: MyApp()),
 
   );

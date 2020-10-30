@@ -22,7 +22,19 @@ class UserApi {
       response = await apiClient.getUserByLogin(user);
       //print(response);
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
+      print("Exception occurred: $error stackTrace: $stacktrace");
+    }
+    return response;
+  }
+
+  Future<List<User>> getAllUser() async {
+    List<User> response;
+
+    try {
+      response = await apiClient.getAllUser();
+      //print(response);
+    } catch (error, stacktrace) {
+      print("Exception occurred: $error stackTrace: $stacktrace");
     }
     return response;
   }
