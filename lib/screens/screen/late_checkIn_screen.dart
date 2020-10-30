@@ -17,6 +17,7 @@ import 'package:provider_flutter_application/provider/home_provider.dart';
 import 'package:provider_flutter_application/provider/late_checkin_provider.dart';
 import 'package:provider_flutter_application/screens/widgets/header_app.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class LateCheckInScreen extends StatelessWidget {
   @override
@@ -27,7 +28,19 @@ class LateCheckInScreen extends StatelessWidget {
   }
 }
 
-class _LateCheckInScreen extends StatelessWidget {
+class _LateCheckInScreen extends StatefulWidget {
+  _LateCheckInScreenState createState() => _LateCheckInScreenState();
+}
+
+class _LateCheckInScreenState extends State<_LateCheckInScreen> {
+  int enableStatus;
+
+  @override
+  void initState() {
+    enableStatus = 0;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     log('Build at ' + DateTime.now().toString(), name: '[LateCheckIn screen]');
@@ -81,9 +94,9 @@ class _LateCheckInScreen extends StatelessWidget {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
+                                            CrossAxisAlignment.stretch,
                                         mainAxisAlignment:
-                                        MainAxisAlignment.start,
+                                            MainAxisAlignment.start,
                                         children: [
                                           Container(
                                             child: AutoSizeText(
@@ -105,8 +118,8 @@ class _LateCheckInScreen extends StatelessWidget {
                                                 },
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
-                                                  BorderRadius.circular(
-                                                      18.0),
+                                                      BorderRadius.circular(
+                                                          18.0),
                                                 ),
                                                 color: Color(0xff29404E),
                                                 /*Color.fromRGBO(15, 129, 68, 1),*/
@@ -116,7 +129,7 @@ class _LateCheckInScreen extends StatelessWidget {
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:
-                                                      FontWeight.w500,
+                                                          FontWeight.w500,
                                                       fontSize: 30,
                                                     ),
                                                   ),
@@ -132,7 +145,7 @@ class _LateCheckInScreen extends StatelessWidget {
                                     ),
                                     Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Align(
                                           alignment: Alignment.centerLeft,
@@ -157,7 +170,7 @@ class _LateCheckInScreen extends StatelessWidget {
                                                   value: states.defaultTime,
                                                   is24HrFormat: true,
                                                   onChange:
-                                                  states.onTimeChanged,
+                                                      states.onTimeChanged,
                                                   // onChangeDateTime: (DateTime dateTime) {
                                                   //   print(dateTime);
                                                   // },
@@ -166,7 +179,7 @@ class _LateCheckInScreen extends StatelessWidget {
                                             },
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
-                                              BorderRadius.circular(18.0),
+                                                  BorderRadius.circular(18.0),
                                             ),
                                             color: Color(0xff29404E),
                                             /*Color.fromRGBO(15, 76, 129, 1),*/
@@ -230,7 +243,7 @@ class _LateCheckInScreen extends StatelessWidget {
                                       ),
                                       hintText: 'ex. I thought checked in.',
                                       hintStyle:
-                                      TextStyle(color: Colors.grey[400]),
+                                          TextStyle(color: Colors.grey[400]),
                                     ),
                                   ),
                                 ),
@@ -245,20 +258,20 @@ class _LateCheckInScreen extends StatelessWidget {
                                             if (states.description.length >=
                                                 10) {
                                               return alertCheck(context,
-                                                  'Late Check-In', states)
+                                                      'Late Check-In', states)
                                                   .show();
                                             } else {
                                               showSimpleNotification(
                                                   Text(
                                                       'Please fill the description with more than 10 characters!'),
                                                   duration:
-                                                  Duration(seconds: 1),
+                                                      Duration(seconds: 1),
                                                   background: Colors.red);
                                             }
                                           },
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                            BorderRadius.circular(12.0),
+                                                BorderRadius.circular(12.0),
                                           ),
                                           color: Colors.green[800],
                                           /*Color.fromRGBO(15, 76, 129, 1),*/
@@ -284,23 +297,22 @@ class _LateCheckInScreen extends StatelessWidget {
                                             if (states.description.length >=
                                                 10) {
                                               return alertCheck(context,
-                                                  'Late Check-Out', states)
+                                                      'Late Check-Out', states)
                                                   .show();
                                             } else {
                                               showSimpleNotification(
                                                   Text(
                                                       'Please fill the description with more than 10 characters!'),
                                                   duration:
-                                                  Duration(seconds: 1),
+                                                      Duration(seconds: 1),
                                                   background: Colors.red);
                                             }
                                           },
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                            BorderRadius.circular(12.0),
+                                                BorderRadius.circular(12.0),
                                           ),
                                           color: Colors.blue[800],
-                                          /*Color.fromRGBO(15, 76, 129, 1),*/
                                           child: Container(
                                             child: AutoSizeText(
                                               'Check Out',
@@ -321,6 +333,20 @@ class _LateCheckInScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                      ToggleSwitch(
+                        initialLabelIndex: enableStatus,
+                        labels: ['ON', 'OFF'],
+                        onToggle: (index) {
+                          if (index == 0) {
+                            log('on');
+                          } else {
+                            log('off');
+                          }
+
+                            enableStatus = index;
+
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -332,67 +358,122 @@ class _LateCheckInScreen extends StatelessWidget {
     );
   }
 
-  _showDatePicker(BuildContext context, LateCheckInProvider states) async {
-    HolidayAction holidayAction = new HolidayAction();
-    List<DateTime> holidayList = await holidayAction.getAllDateHoliday();
+  HolidayAction holidayAction;
+  List<DateTime> holidayList;
+  List<DateTime> disabledDate;
+  int virtualDays = 12;
+  DateTime virtualCurrentDate;
+  DateTime firstDateSelectable;
+  int virtualHours;
+  int virtualMinutes;
+  int virtualSeconds;
+
+  Future<bool> setList() async {
 
 
-    List<DateTime> disabledDate = new List<DateTime>();
-    int virtualDays = 12;
-    DateTime virtualCurrentDate = DateTime(DateTime.now().year, DateTime.now().month, virtualDays, DateTime.now().hour, DateTime.now().minute, DateTime.now().second);
-    log('1 virtualCurrentDate : {$virtualCurrentDate}');
-    DateTime firstDateSelectable = virtualCurrentDate;
-
-    log('1 firstDateSelectable : {$firstDateSelectable}');
-    int virtualHours = virtualCurrentDate.hour;
-    int virtualMinutes = virtualCurrentDate.minute;
-    int virtualSeconds = virtualCurrentDate.second;
-    // String weekday =  DateFormat('EEEE').format(virtualCurrentDate);
 
 
-    /* condition */
-    log('[Weekdays]: ${virtualCurrentDate.weekday}');
-    if(virtualCurrentDate.weekday >= 2 && virtualCurrentDate.weekday <= 5) { //tuesday-friday
-      //can late checkin-out 1 day before
-      firstDateSelectable = virtualCurrentDate.subtract(Duration(days: 2));
-      log('sdfsdf $firstDateSelectable');
-    }else if(virtualCurrentDate.weekday == 1){ //monday
+    if (enableStatus == 0) {
+      log('case on');
+      holidayAction = new HolidayAction();
+      holidayList = await holidayAction.getAllDateHoliday();
+
+      disabledDate = new List<DateTime>();
+      // virtualDays = 12;
+      virtualCurrentDate = DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+          virtualDays,
+          DateTime.now().hour,
+          DateTime.now().minute,
+          DateTime.now().second);
+      log('1 virtualCurrentDate : {$virtualCurrentDate}');
+      firstDateSelectable = virtualCurrentDate;
+
+      log('1 firstDateSelectable : {$firstDateSelectable}');
+      virtualHours = virtualCurrentDate.hour;
+      virtualMinutes = virtualCurrentDate.minute;
+      virtualSeconds = virtualCurrentDate.second;
+      // String weekday =  DateFormat('EEEE').format(virtualCurrentDate);
+
+      /* condition */
+      log('[Weekdays]: ${virtualCurrentDate.weekday}');
+      if (virtualCurrentDate.weekday >= 2 && virtualCurrentDate.weekday <= 5) {
+        //tuesday-friday
+        //can late checkin-out 1 day before
+        firstDateSelectable = virtualCurrentDate.subtract(Duration(days: 2));
+        log('sdfsdf $firstDateSelectable');
+      } else if (virtualCurrentDate.weekday == 1) {
+        //monday
         //can late checkin-out 1 day before include Friday and Sunday
-        firstDateSelectable = virtualCurrentDate.subtract(Duration(days:4));
-        disabledDate.add(virtualCurrentDate.subtract(Duration(days:2)));
-
-    }else if(virtualCurrentDate.weekday == 6){ //saturday
-      firstDateSelectable = virtualCurrentDate.subtract(Duration(days:2));
-      disabledDate.add(virtualCurrentDate.subtract(Duration(days:3)));
-    }
-    else if(virtualCurrentDate.weekday == 7){ //sunday
-      firstDateSelectable = virtualCurrentDate.subtract(Duration(days:3));
-    }
-
-    // add current hour minute second
-    for(int i = 0; i< holidayList.length; i++){
-      holidayList[i] = DateTime(holidayList[i].year, holidayList[i].month, holidayList[i].day,virtualHours,virtualMinutes,virtualSeconds);
-      //log('subtract: ${holidayList[i]}');
-    }
-
-
-    //TODO: Holiday
-    /* check Holiday */
-    for(int i = holidayList.length-1; i >= 0; i--){
-        log('round $i : ${holidayList[i].toString()}',name:'holidayList');
-        log('round $i : ${firstDateSelectable.toString()}',name:'holidayList');
-        disabledDate.add(holidayList[i]);
-    /* case holiday same day's can check-in-out then [firstDateSelectable add duration +1] */
-      if(holidayList[i].subtract(Duration(days:1)) == firstDateSelectable){
-
-        log('same Holiday: {${holidayList[i]}}, firstDateSelectable : {$firstDateSelectable}');
-        firstDateSelectable = firstDateSelectable.subtract(Duration(days:1));
+        firstDateSelectable = virtualCurrentDate.subtract(Duration(days: 4));
+        disabledDate.add(virtualCurrentDate.subtract(Duration(days: 2)));
+      } else if (virtualCurrentDate.weekday == 6) {
+        //saturday
+        firstDateSelectable = virtualCurrentDate.subtract(Duration(days: 2));
+        disabledDate.add(virtualCurrentDate.subtract(Duration(days: 3)));
+      } else if (virtualCurrentDate.weekday == 7) {
+        //sunday
+        firstDateSelectable = virtualCurrentDate.subtract(Duration(days: 3));
       }
+      // add current hour minute second
+      for (int i = 0; i < holidayList.length; i++) {
+        holidayList[i] = DateTime(holidayList[i].year, holidayList[i].month,
+            holidayList[i].day, virtualHours, virtualMinutes, virtualSeconds);
+        //log('subtract: ${holidayList[i]}');
+      }
+
+      //TODO: Holiday
+      /* check Holiday */
+      for (int i = holidayList.length - 1; i >= 0; i--) {
+        log('round $i : ${holidayList[i].toString()}', name: 'holidayList');
+        log('round $i : ${firstDateSelectable.toString()}',
+            name: 'holidayList');
+        disabledDate.add(holidayList[i]);
+        /* case holiday same day's can check-in-out then [firstDateSelectable add duration +1] */
+        if (holidayList[i].subtract(Duration(days: 1)) == firstDateSelectable) {
+          log('same Holiday: {${holidayList[i]}}, firstDateSelectable : {$firstDateSelectable}');
+          firstDateSelectable = firstDateSelectable.subtract(Duration(days: 1));
+        }
+      }
+
+      log('firstDateSelectable: {$firstDateSelectable}');
+      log('virtualCurrentDate: {$virtualCurrentDate}');
+    }else{
+      log('case off');
+      disabledDate.clear();
+      holidayAction = new HolidayAction();
+      holidayList = await holidayAction.getAllDateHoliday();
+
+      disabledDate = new List<DateTime>();
+      virtualCurrentDate = DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+          virtualDays,
+          DateTime.now().hour,
+          DateTime.now().minute,
+          DateTime.now().second);
+      log('1 virtualCurrentDate : {$virtualCurrentDate}');
+      firstDateSelectable = virtualCurrentDate;
+
+      log('1 firstDateSelectable : {$firstDateSelectable}');
+      virtualHours = virtualCurrentDate.hour;
+      virtualMinutes = virtualCurrentDate.minute;
+      virtualSeconds = virtualCurrentDate.second;
+      // String weekday =  DateFormat('EEEE').format(virtualCurrentDate);
+
+      /* condition */
+      log('[Weekdays]: ${virtualCurrentDate.weekday}');
+
+      firstDateSelectable = virtualCurrentDate.subtract(Duration(days: 30));
+
     }
 
+    return true;
+  }
 
-    log('firstDateSelectable: {$firstDateSelectable}');
-    log('virtualCurrentDate: {$virtualCurrentDate}');
+  _showDatePicker(BuildContext context, LateCheckInProvider states) async {
+    bool test = await setList();
 
     return showRoundedDatePicker(
       context: context,
@@ -401,7 +482,7 @@ class _LateCheckInScreen extends StatelessWidget {
       lastDate: virtualCurrentDate,
       listDateDisabled: disabledDate,
       barrierDismissible: true,
-        customWeekDays: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+      customWeekDays: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
       height: MediaQuery.of(context).size.height * 0.45,
       theme: ThemeData(
         primaryColor: Color.fromRGBO(15, 129, 68, 1),
@@ -413,7 +494,7 @@ class _LateCheckInScreen extends StatelessWidget {
         if (available == true) {
           states.onDateChanged(dateTime);
           Get.back();
-        }else if (available == false){
+        } else if (available == false) {
           showSimpleNotification(Text("You can't choose this day"),
               duration: Duration(seconds: 2), background: Colors.red);
         }
@@ -425,8 +506,8 @@ class _LateCheckInScreen extends StatelessWidget {
     );
   }
 
-  Alert alertCheck(BuildContext context, String typeCheck,
-      LateCheckInProvider states) {
+  Alert alertCheck(
+      BuildContext context, String typeCheck, LateCheckInProvider states) {
     log('[lat]: ${states.latitude}');
     log('[long]: ${states.longitude}');
     String checkInType;
@@ -453,23 +534,22 @@ class _LateCheckInScreen extends StatelessWidget {
         ),
       ),
       content: Consumer<HomeProvider>(
-        builder: (BuildContext context, states, Widget child) =>
-            Container(
-              height: 200,
-              child: ((states.latitude == null) && (states.longitude == null))
-                  ? new LoadingRipple()
-                  : GoogleMap(
-                mapType: MapType.normal,
-                myLocationEnabled: true,
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(states.latitude ?? 0, states.longitude ?? 0),
-                  zoom: 20,
+        builder: (BuildContext context, states, Widget child) => Container(
+          height: 200,
+          child: ((states.latitude == null) && (states.longitude == null))
+              ? new LoadingRipple()
+              : GoogleMap(
+                  mapType: MapType.normal,
+                  myLocationEnabled: true,
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(states.latitude ?? 0, states.longitude ?? 0),
+                    zoom: 20,
+                  ),
+                  onMapCreated: (GoogleMapController controller) {
+                    states.mapController.complete(controller);
+                  },
                 ),
-                onMapCreated: (GoogleMapController controller) {
-                  states.mapController.complete(controller);
-                },
-              ),
-            ),
+        ),
       ),
       title: '$typeCheck',
       buttons: [
