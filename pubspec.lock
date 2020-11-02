@@ -546,13 +546,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
-  keyboard_avoider:
-    dependency: "direct main"
-    description:
-      name: keyboard_avoider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
   location:
     dependency: "direct main"
     description:
@@ -1027,6 +1020,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1+2"
+  toggle_switch:
+    dependency: "direct main"
+    description:
+      name: toggle_switch
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.8"
   tuple:
     dependency: transitive
     description:

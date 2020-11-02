@@ -48,7 +48,7 @@ class _TicketScreen extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.bug_report,
-                        size: 22,
+                        size: 25,
                         color: Colors.black,
                       ),
                       SizedBox(
@@ -63,9 +63,7 @@ class _TicketScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
+
                   Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -98,7 +96,7 @@ class _TicketScreen extends StatelessWidget {
               builder: (BuildContext context, states, Widget child) =>
                   Container(
                 padding: EdgeInsets.only(
-                  top: 180.0,
+                  top: 170.0,
                   left: 30.0,
                   right: 30.0,
                 ),
@@ -141,8 +139,8 @@ class _TicketScreen extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return InkWell(
                                 onTap: () {
-                                  Get.toNamed('articleDetails',
-                                      arguments: states.ticketListView[index]);
+                                  // Get.toNamed('articleDetails',
+                                  //     arguments: states.ticketListView[index]);
                                 },
                                 child: TicketTile(
                                   //Send List to Tile

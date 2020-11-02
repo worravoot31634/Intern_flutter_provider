@@ -7,17 +7,17 @@ class AddTicketWithSidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: addTicketWithSidebar(),
+      home: _AddTicketWithSidebar(),
     );
   }
 }
 
-class addTicketWithSidebar extends StatefulWidget {
+class _AddTicketWithSidebar extends StatefulWidget {
   @override
-  _addTicketWithSidebarState createState() => _addTicketWithSidebarState();
+  _AddTicketWithSidebarState createState() => _AddTicketWithSidebarState();
 }
 
-class _addTicketWithSidebarState extends State<addTicketWithSidebar>{
+class _AddTicketWithSidebarState extends State<_AddTicketWithSidebar>{
 
   @override
   Widget build(BuildContext context) {

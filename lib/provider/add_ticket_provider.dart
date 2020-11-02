@@ -29,11 +29,19 @@ class AddTicketProvider with ChangeNotifier {
   String _defaultSelectedUserCreate;
   String _defaultSelectedUserAssigned;
 
+  FocusNode _focusDes = new FocusNode();
+  FocusNode _focusExp = new FocusNode();
+  FocusNode _focusAct = new FocusNode();
+  double _heightPadding = 0;
+
+
+
   AddTicketProvider() {
     init();
   }
 
   void init() async {
+    initKeyboard();
     clearTextField();
     SharedPref pref = new SharedPref();
     _fileName = null;
@@ -45,6 +53,31 @@ class AddTicketProvider with ChangeNotifier {
     getAllUserList();
     notifyListeners();
   }
+
+  initKeyboard(){
+    _focusDes.addListener(_onFocusChange);
+    _focusExp.addListener(_onFocusChange);
+    _focusAct.addListener(_onFocusChange);
+    notifyListeners();
+  }
+  void _onFocusChange(){
+
+    debugPrint("1Focus: "+_focusDes.hasFocus.toString());
+    debugPrint("2Focus: "+_focusExp.hasFocus.toString());
+    debugPrint("3Focus: "+_focusAct.hasFocus.toString());
+
+    if((_focusDes.hasFocus || _focusExp.hasFocus || _focusAct.hasFocus)){
+      _heightPadding = 150;
+      log('called 150');
+    }else if(!(_focusDes.hasFocus && _focusExp.hasFocus && _focusAct.hasFocus)){
+      log('called 0');
+      _heightPadding = 0;
+    }
+    log(_heightPadding.toString());
+    notifyListeners();
+  }
+
+
 
   void addFile() async {
     _resultFile = await FilePicker.platform.pickFiles();
@@ -134,6 +167,8 @@ class AddTicketProvider with ChangeNotifier {
     notifyListeners();
   }
 
+
+
   String get defaultSelectedUserCreate => _defaultSelectedUserCreate;
 
   String get defaultSelectedUserAssigned => _defaultSelectedUserAssigned;
@@ -153,4 +188,16 @@ class AddTicketProvider with ChangeNotifier {
   TextEditingController get ctrlTicketUrl => _ctrlTicketUrl;
 
   TextEditingController get ctrlTicketName => _ctrlTicketName;
+
+  String get userAssigned => _userAssigned;
+
+  String get userCreate => _userCreate;
+
+  double get heightPadding => _heightPadding;
+
+  FocusNode get focusAct => _focusAct;
+
+  FocusNode get focusExp => _focusExp;
+
+  FocusNode get focusDes => _focusDes;
 }

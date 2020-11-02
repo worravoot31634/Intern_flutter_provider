@@ -48,7 +48,7 @@ class _ArticleDetailsScreen extends StatelessWidget {
         child: Stack(
           children: [
             Container(
-              color: Colors.white,
+              color: Colors.grey[100],
             ),
             Container(
               padding: EdgeInsets.symmetric(

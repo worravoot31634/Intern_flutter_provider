@@ -218,6 +218,7 @@ class HomeProvider with ChangeNotifier {
           Get.toNamed('ticket');
         }
         break;
+
       default:
         {
           print('default');

@@ -57,11 +57,10 @@ dependencies:
   auto_size_text_field: ^0.1.5
   uuid: ^2.2.2
   get: ^3.13.2
-  keyboard_avoider: ^0.1.2
   file_picker: ^2.0.11
   connectivity: ^2.0.0
   dropdown_search: ^0.4.5
-
+  toggle_switch: ^0.1.8
 
   flutter_launcher_icons: ^0.8.1
   cupertino_icons: ^1.0.0

@@ -23,8 +23,6 @@ class _LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     log('Build at ' + DateTime.now().toString(), name: '[Login screen]');
 
-    //status = context.watch<LoginProvider>().loading;
-
     return Consumer<LoginProvider>(
       builder: (BuildContext context, states, Widget child) => Scaffold(
         backgroundColor: Colors.white,

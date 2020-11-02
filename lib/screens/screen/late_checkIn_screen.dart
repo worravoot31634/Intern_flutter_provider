@@ -28,18 +28,7 @@ class LateCheckInScreen extends StatelessWidget {
   }
 }
 
-class _LateCheckInScreen extends StatefulWidget {
-  _LateCheckInScreenState createState() => _LateCheckInScreenState();
-}
-
-class _LateCheckInScreenState extends State<_LateCheckInScreen> {
-  int enableStatus;
-
-  @override
-  void initState() {
-    enableStatus = 0;
-    super.initState();
-  }
+class _LateCheckInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -334,17 +323,10 @@ class _LateCheckInScreenState extends State<_LateCheckInScreen> {
                         ),
                       ),
                       ToggleSwitch(
-                        initialLabelIndex: enableStatus,
-                        labels: ['ON', 'OFF'],
+                        initialLabelIndex: states.enableStatus,
+                        labels: ['OFF', 'ON'],
                         onToggle: (index) {
-                          if (index == 0) {
-                            log('on');
-                          } else {
-                            log('off');
-                          }
-
-                            enableStatus = index;
-
+                          states.changeEnableButton(index);
                         },
                       ),
                     ],
@@ -358,129 +340,14 @@ class _LateCheckInScreenState extends State<_LateCheckInScreen> {
     );
   }
 
-  HolidayAction holidayAction;
-  List<DateTime> holidayList;
-  List<DateTime> disabledDate;
-  int virtualDays = 12;
-  DateTime virtualCurrentDate;
-  DateTime firstDateSelectable;
-  int virtualHours;
-  int virtualMinutes;
-  int virtualSeconds;
-
-  Future<bool> setList() async {
-
-
-
-
-    if (enableStatus == 0) {
-      log('case on');
-      holidayAction = new HolidayAction();
-      holidayList = await holidayAction.getAllDateHoliday();
-
-      disabledDate = new List<DateTime>();
-      // virtualDays = 12;
-      virtualCurrentDate = DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          virtualDays,
-          DateTime.now().hour,
-          DateTime.now().minute,
-          DateTime.now().second);
-      log('1 virtualCurrentDate : {$virtualCurrentDate}');
-      firstDateSelectable = virtualCurrentDate;
-
-      log('1 firstDateSelectable : {$firstDateSelectable}');
-      virtualHours = virtualCurrentDate.hour;
-      virtualMinutes = virtualCurrentDate.minute;
-      virtualSeconds = virtualCurrentDate.second;
-      // String weekday =  DateFormat('EEEE').format(virtualCurrentDate);
-
-      /* condition */
-      log('[Weekdays]: ${virtualCurrentDate.weekday}');
-      if (virtualCurrentDate.weekday >= 2 && virtualCurrentDate.weekday <= 5) {
-        //tuesday-friday
-        //can late checkin-out 1 day before
-        firstDateSelectable = virtualCurrentDate.subtract(Duration(days: 2));
-        log('sdfsdf $firstDateSelectable');
-      } else if (virtualCurrentDate.weekday == 1) {
-        //monday
-        //can late checkin-out 1 day before include Friday and Sunday
-        firstDateSelectable = virtualCurrentDate.subtract(Duration(days: 4));
-        disabledDate.add(virtualCurrentDate.subtract(Duration(days: 2)));
-      } else if (virtualCurrentDate.weekday == 6) {
-        //saturday
-        firstDateSelectable = virtualCurrentDate.subtract(Duration(days: 2));
-        disabledDate.add(virtualCurrentDate.subtract(Duration(days: 3)));
-      } else if (virtualCurrentDate.weekday == 7) {
-        //sunday
-        firstDateSelectable = virtualCurrentDate.subtract(Duration(days: 3));
-      }
-      // add current hour minute second
-      for (int i = 0; i < holidayList.length; i++) {
-        holidayList[i] = DateTime(holidayList[i].year, holidayList[i].month,
-            holidayList[i].day, virtualHours, virtualMinutes, virtualSeconds);
-        //log('subtract: ${holidayList[i]}');
-      }
-
-      //TODO: Holiday
-      /* check Holiday */
-      for (int i = holidayList.length - 1; i >= 0; i--) {
-        log('round $i : ${holidayList[i].toString()}', name: 'holidayList');
-        log('round $i : ${firstDateSelectable.toString()}',
-            name: 'holidayList');
-        disabledDate.add(holidayList[i]);
-        /* case holiday same day's can check-in-out then [firstDateSelectable add duration +1] */
-        if (holidayList[i].subtract(Duration(days: 1)) == firstDateSelectable) {
-          log('same Holiday: {${holidayList[i]}}, firstDateSelectable : {$firstDateSelectable}');
-          firstDateSelectable = firstDateSelectable.subtract(Duration(days: 1));
-        }
-      }
-
-      log('firstDateSelectable: {$firstDateSelectable}');
-      log('virtualCurrentDate: {$virtualCurrentDate}');
-    }else{
-      log('case off');
-      disabledDate.clear();
-      holidayAction = new HolidayAction();
-      holidayList = await holidayAction.getAllDateHoliday();
-
-      disabledDate = new List<DateTime>();
-      virtualCurrentDate = DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          virtualDays,
-          DateTime.now().hour,
-          DateTime.now().minute,
-          DateTime.now().second);
-      log('1 virtualCurrentDate : {$virtualCurrentDate}');
-      firstDateSelectable = virtualCurrentDate;
-
-      log('1 firstDateSelectable : {$firstDateSelectable}');
-      virtualHours = virtualCurrentDate.hour;
-      virtualMinutes = virtualCurrentDate.minute;
-      virtualSeconds = virtualCurrentDate.second;
-      // String weekday =  DateFormat('EEEE').format(virtualCurrentDate);
-
-      /* condition */
-      log('[Weekdays]: ${virtualCurrentDate.weekday}');
-
-      firstDateSelectable = virtualCurrentDate.subtract(Duration(days: 30));
-
-    }
-
-    return true;
-  }
-
   _showDatePicker(BuildContext context, LateCheckInProvider states) async {
-    bool test = await setList();
 
     return showRoundedDatePicker(
       context: context,
-      initialDate: virtualCurrentDate,
-      firstDate: firstDateSelectable,
-      lastDate: virtualCurrentDate,
-      listDateDisabled: disabledDate,
+      initialDate: states.virtualCurrentDate,
+      firstDate: states.firstDateSelectable,
+      lastDate: states.virtualCurrentDate,
+      listDateDisabled: states.listDateDisabled,
       barrierDismissible: true,
       customWeekDays: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
       height: MediaQuery.of(context).size.height * 0.45,
