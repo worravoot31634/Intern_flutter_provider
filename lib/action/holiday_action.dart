@@ -11,22 +11,25 @@ class HolidayAction {
       //String -> DateTime -> String
 
       List<DateTime> holidayDate = new List<DateTime>();
-      for (int index = 0; index < holidayApiResponse.length; index++) {
-        DateTime startDate = convertStringToDate(holidayApiResponse[index].startDate);
-        DateTime endDate = convertStringToDate(holidayApiResponse[index].endDate);
-        //case startDate equal endDate then [add only startDate]
-        if(startDate == endDate){
-          holidayDate.add(startDate);
-        }
-        // case startDate not Equal endDate then [add range of startDate and endDate]
-        else{
-          List<DateTime> tempRangeOfDateList = getDaysInBetween(startDate,endDate);
-          holidayDate.addAll(tempRangeOfDateList);
-        }
+      if(holidayApiResponse.length > 0){
+        for (int index = 0; index < holidayApiResponse.length; index++) {
+          DateTime startDate = convertStringToDate(holidayApiResponse[index].startDate);
+          DateTime endDate = convertStringToDate(holidayApiResponse[index].endDate);
+          //case startDate equal endDate then [add only startDate]
+          if(startDate == endDate){
+            holidayDate.add(startDate);
+          }
+          // case startDate not Equal endDate then [add range of startDate and endDate]
+          else{
+            List<DateTime> tempRangeOfDateList = getDaysInBetween(startDate,endDate);
+            holidayDate.addAll(tempRangeOfDateList);
+          }
 
 
-        //log('num index : $index');
+          //log('num index : $index');
+        }
       }
+
       return holidayDate;
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");
@@ -39,7 +42,7 @@ class HolidayAction {
     List<DateTime> days = [];
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
       days.add(startDate.add(Duration(days: i)));
-      //log(days.toString(),name: 'getDaysInBeteween');
+      //log(days.toString(),name: 'getDaysInBetween');
     }
     return days;
   }
@@ -52,7 +55,4 @@ class HolidayAction {
     return DateFormat("dd MMMM yyyy").format(date);
   }
 
-// String changeFormatDate(String oldDateFormat) {
-//   return formattedDateToString(convertStringToDate(oldDateFormat));
-// }
 }

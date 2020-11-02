@@ -149,22 +149,25 @@ class LateCheckInProvider with ChangeNotifier {
   }
 
   void initCalendar() async {
+    _virtualCurrentDate = DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        _virtualDays,
+        DateTime.now().hour,
+        DateTime.now().minute,
+        DateTime.now().second);
+
+    _firstDateSelectable = _virtualCurrentDate;
+    _virtualHours = _virtualCurrentDate.hour;
+    _virtualMinutes = _virtualCurrentDate.minute;
+    _virtualSeconds = _virtualCurrentDate.second;
+
+
     if (_enableStatus == 1) {
       HolidayAction holidayAction = new HolidayAction();
       _holidayList = await holidayAction.getAllDateHoliday();
       _listDateDisabled = new List<DateTime>();
-      _virtualCurrentDate = DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          _virtualDays,
-          DateTime.now().hour,
-          DateTime.now().minute,
-          DateTime.now().second);
 
-      _firstDateSelectable = _virtualCurrentDate;
-      _virtualHours = _virtualCurrentDate.hour;
-      _virtualMinutes = _virtualCurrentDate.minute;
-      _virtualSeconds = _virtualCurrentDate.second;
 
       if (_virtualCurrentDate.weekday >= 2 &&
           _virtualCurrentDate.weekday <= 5) {
@@ -213,7 +216,7 @@ class LateCheckInProvider with ChangeNotifier {
       }
     } else {
       if(_listDateDisabled != null) _listDateDisabled.clear();
-      _firstDateSelectable = _virtualCurrentDate.subtract(Duration(days: 30));
+      _firstDateSelectable = _virtualCurrentDate.subtract(Duration(days: 60));
     }
 
     notifyListeners();
