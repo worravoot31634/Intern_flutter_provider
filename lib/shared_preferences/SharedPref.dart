@@ -1,4 +1,5 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPref {
   String _id;
@@ -10,69 +11,81 @@ class SharedPref {
 
 
   Future<String> getId() async {
-    final storage = new FlutterSecureStorage();
-    _id = await storage.read(key: 'id') ?? null;
+    //final storage = new FlutterSecureStorage();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _id = prefs.getString("id") ?? null;
     return _id;
   }
 
   Future<void> setId(String id) async {
-    final storage = new FlutterSecureStorage();
-   await storage.write(key: 'id', value: id);
+    // final storage = new FlutterSecureStorage();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+   await prefs.setString("id", id);
   }
 
   Future<String> getName() async {
-    final storage = new FlutterSecureStorage();
-    _name = await storage.read(key: 'name') ?? null;
+    // final storage = new FlutterSecureStorage();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _name = prefs.getString("name") ?? null;
     return _name;
   }
 
   Future<void> setName(String name) async {
-    final storage = new FlutterSecureStorage();
-    await storage.write(key: 'name', value: name);
+    // final storage = new FlutterSecureStorage();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("name", name);
   }
 
   Future<String> getRoleId() async {
-    final storage = new FlutterSecureStorage();
-    _roleId = await storage.read(key: 'roleId') ?? null;
+    // final storage = new FlutterSecureStorage();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _roleId = prefs.getString("roleId")?? null;
     return _roleId;
   }
 
   Future<void> setRoleId(String roleId) async {
-    final storage = new FlutterSecureStorage();
-    await storage.write(key: 'roleId', value: roleId);
+    // final storage = new FlutterSecureStorage();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("roleId", roleId);
   }
 
   Future<String> getDepartmentId() async {
-    final storage = new FlutterSecureStorage();
-    _departmentId = await storage.read(key: 'departmentId') ?? null;
+    // final storage = new FlutterSecureStorage();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _departmentId = prefs.getString("departmentId") ?? null;
     return _departmentId;
   }
 
   Future<void> setDepartmentId(String departmentId) async {
-    final storage = new FlutterSecureStorage();
-    await storage.write(key: 'departmentId', value: departmentId);
+    // final storage = new FlutterSecureStorage();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("departmentId", departmentId);
   }
 
   Future<String> getToken() async {
-    final storage = new FlutterSecureStorage();
-    _token = await storage.read(key: 'token') ?? null;
+    // final storage = new FlutterSecureStorage();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _token = prefs.getString("token") ?? null;
     return _token;
   }
 
   Future<void> setToken(String token) async {
-    final storage = new FlutterSecureStorage();
-    await storage.write(key: 'token', value: token);
+    // final storage = new FlutterSecureStorage();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("token", token);
   }
 
   Future<String> getTokenDateExpired() async {
-    final storage = new FlutterSecureStorage();
-    _tokenDateExpired = await storage.read(key: 'tokenDateExpired') ?? null;
+    // final storage = new FlutterSecureStorage();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _tokenDateExpired = prefs.getString("tokenDateExpired") ?? null;
     return _tokenDateExpired;
   }
 
   Future<void> setTokenDateExpired(String tokenDateExpired) async {
-    final storage = new FlutterSecureStorage();
-    await storage.write(key: 'tokenDateExpired', value: tokenDateExpired);
+    // final storage = new FlutterSecureStorage();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("tokenDateExpired", tokenDateExpired);
   }
 
 }

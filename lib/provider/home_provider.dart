@@ -230,11 +230,11 @@ class HomeProvider with ChangeNotifier {
 
 
   String getCurrentTime() {
-    return _formatTime(DateTime.now());
+    return _formatTime(new DateTime.now());
   }
 
   String getCurrentDate() {
-    return _formatDate(DateTime.now());
+    return _formatDate(new DateTime.now());
   }
 
   String _formatTime(DateTime dateTime) {

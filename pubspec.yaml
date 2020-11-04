@@ -52,7 +52,6 @@ dependencies:
   flutter_placeholder_textlines: ^1.0.4
   provider: ^4.3.2+2
   cached_network_image: ^2.3.2+1
-  flutter_secure_storage: ^3.3.4
   auto_size_text: ^2.1.0
   auto_size_text_field: ^0.1.5
   uuid: ^2.2.2

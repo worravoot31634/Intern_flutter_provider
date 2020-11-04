@@ -1,15 +1,10 @@
-import 'dart:developer';
+
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:provider_flutter_application/provider/home_provider.dart';
-import 'package:provider_flutter_application/provider/login_provider.dart';
-import 'package:provider_flutter_application/provider/side_bar/side_bar_provider.dart';
-import 'package:provider_flutter_application/screens/screen/login_screen.dart';
-import 'package:provider/provider.dart';
 import 'package:provider_flutter_application/global.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SideBar extends StatelessWidget {
   final Widget screen;
@@ -143,8 +138,8 @@ class _SideBarState extends State<_SideBar> with TickerProviderStateMixin {
               InkWell(
                 onTap: () async {
                   print('logout');
-                  final storage = new FlutterSecureStorage();
-                  await storage.deleteAll();
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.clear();
                   //context.read<HomeProvider>().dispose();
                   Get.offAllNamed('/login');
                 },
